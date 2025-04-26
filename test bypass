@@ -1,4 +1,4 @@
-local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
+   local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
        {Title = "By Father Rixhu, Insta ID ~ Pvtrixhu", Description = "Font Provided By Limo, youtube~ LuvLimo2"},
@@ -91,6 +91,48 @@ G2L["10"] = Instance.new("UICorner", G2L["f"])
 G2L["10"]["CornerRadius"] = UDim.new(0, 2)
 G2L["11"] = Instance.new("LocalScript", G2L["f"])
 
+-- Checkbox and minimize features
+local checkbox = Instance.new("TextButton", G2L["2"])
+checkbox.Size = UDim2.new(0, 120, 0, 30)
+checkbox.Position = UDim2.new(0, 10, 0.35, 0)
+checkbox.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+checkbox.Text = "Auto Clear: ON"
+checkbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+checkbox.TextScaled = true
+
+local minimizeButton = Instance.new("TextButton", G2L["2"])
+minimizeButton.Size = UDim2.new(0, 60, 0, 30)
+minimizeButton.Position = UDim2.new(0, 250, 0, 0)
+minimizeButton.Text = "Minimize"
+minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local isAutoClearEnabled = true
+
+checkbox.MouseButton1Click:Connect(function()
+    isAutoClearEnabled = not isAutoClearEnabled
+    if isAutoClearEnabled then
+        checkbox.Text = "Auto Clear: ON"
+    else
+        checkbox.Text = "Auto Clear: OFF"
+    end
+end)
+
+minimizeButton.MouseButton1Click:Connect(function()
+    for _, child in ipairs(G2L["2"]:GetChildren()) do
+        if child:IsA("TextBox") or child:IsA("TextButton") or child:IsA("TextLabel") then
+            child.Visible = not child.Visible
+        end
+    end
+end)
+
+-- Updated processText to check checkbox status
+local function processText()
+    local inputText = G2L["7"].Text
+    local convertedText = filter(inputText)
+    sendChat(convertedText)
+    if not isAutoClearEnabled then
+        G2L["7"].Text = ""  -- Auto clear text when the checkbox is OFF
+    end
 local function C_3()
     local script = G2L["3"]
     local UserInputService = game:GetService("UserInputService")
@@ -206,17 +248,16 @@ local letters = {
     ["y"] = "🆈",
     ["Z"] = "🆉",
     ["z"] = "🆉",
-    ["0"] = "⓪",
-    ["1"] = "①",
-    ["2"] = "②",
-    ["3"] = "③",
-    ["4"] = "④",
-    ["5"] = "⑤",
-    ["6"] = "⑥",
-    ["7"] = "⑦",
-    ["8"] = "⑧",
-    ["9"] = "⑨",
-    ["🩸"] = "nope i donno"
+    ["0"] = "０",
+    ["1"] = "１",
+    ["2"] = "２",
+    ["3"] = "３",
+    ["4"] = "４",
+    ["5"] = "５",
+    ["6"] = "６",
+    ["7"] = "７",
+    ["8"] = "８",
+    ["9"] = "９",
     [" "] = " "
 }
 
@@ -233,7 +274,7 @@ local letters = {
         local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
         local tagged = filteredMessage ~= msg
         if tagged then
-            showNotification("ROBLOX ID - DXRCIEERE (LIV) ~", "NUDES 💦 SERVICE AVAILABLE")
+            showNotification("HELL NAH !!", "TEXT FUCKED")
             textBox.Text = ""
         else
             if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
