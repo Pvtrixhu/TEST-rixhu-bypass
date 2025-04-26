@@ -91,7 +91,6 @@ G2L["10"] = Instance.new("UICorner", G2L["f"])
 G2L["10"]["CornerRadius"] = UDim.new(0, 2)
 G2L["11"] = Instance.new("LocalScript", G2L["f"])
 
--- Checkbox and minimize features
 local checkbox = Instance.new("TextButton", G2L["2"])
 checkbox.Size = UDim2.new(0, 120, 0, 30)
 checkbox.Position = UDim2.new(0, 10, 0.35, 0)
