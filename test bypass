@@ -163,7 +163,6 @@ local function C_a()
     local StarterGui = game:GetService("StarterGui")
     local textButton = script.Parent
     local textBox = script.Parent.Parent.TextBox
-    local chat = TextChatService.ChatInputBarConfiguration.TargetTextChannel
 
     local letters = {
         ["A"] = "🅰", ["a"] = "🅰",
@@ -198,6 +197,9 @@ local function C_a()
         [" "] = " "
     }
 
+    local canSend = true
+    local cooldownTime = 2 -- Cooldown in seconds
+
     local function replace(str, find_str, replace_str)
         local escaped_find_str = find_str:gsub("[%-%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0")
         return str:gsub(escaped_find_str, replace_str)
@@ -211,28 +213,65 @@ local function C_a()
     end
 
     local function showNotification(title, text)
-        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
+        StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = 3
+        })
+    end
+
+    local function startCooldown()
+        canSend = false
+        task.delay(cooldownTime, function()
+            canSend = true
+        end)
+    end
+
+    local function isTagged(message)
+        -- Roblox tags fully censored messages with only #
+        return message:match("^#+$") ~= nil
     end
 
     local function sendChat(msg)
         local channel = TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel
-        if channel then
-            channel:SendAsync(msg)
-            textBox.Text = ""
-        else
+        if not channel then
             showNotification("Error", "No chat channel found!")
+            return
         end
+
+        channel:SendAsync(msg)
+        textBox.Text = ""
+        showNotification("Success", "Message sent!")
     end
 
     local function processText()
+        if not canSend then
+            showNotification("Cooldown", "Please wait before sending another message.")
+            return
+        end
+
         local inputText = textBox.Text
         if inputText and inputText ~= "" then
             local convertedText = filter(inputText)
-            sendChat(convertedText)
+
+            -- Safe filtering using TextChatService (async)
+            TextChatService:FilterStringAsync(convertedText, LocalPlayer):andThen(function(filteredText)
+                if isTagged(filteredText) then
+                    showNotification("Blocked", "Your message was tagged and not sent.")
+                else
+                    sendChat(convertedText)
+                    startCooldown()
+                end
+            end):catch(function()
+                showNotification("Error", "Failed to filter the message.")
+            end)
         end
     end
 
+    -- Button click
     textButton.MouseButton1Click:Connect(processText)
+
+    -- Press Enter
     textBox.FocusLost:Connect(function(enterPressed)
         if enterPressed then
             processText()
