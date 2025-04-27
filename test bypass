@@ -163,7 +163,9 @@ local function C_a()
     local StarterGui = game:GetService("StarterGui")
     local textButton = script.Parent
     local textBox = script.Parent.Parent.TextBox
+    local chatChannel = TextChatService:WaitForChild("ChatInputBarConfiguration").TargetTextChannel
 
+    -- Character mapping
     local letters = {
         ["A"] = "🅰", ["a"] = "🅰",
         ["B"] = "🅱", ["b"] = "🅱",
@@ -191,94 +193,77 @@ local function C_a()
         ["X"] = "🆇", ["x"] = "🆇",
         ["Y"] = "🆈", ["y"] = "🆈",
         ["Z"] = "🆉", ["z"] = "🆉",
-        ["0"] = "０", ["1"] = "１", ["2"] = "２", ["3"] = "３",
-        ["4"] = "４", ["5"] = "５", ["6"] = "６", ["7"] = "７",
-        ["8"] = "８", ["9"] = "９",
+        ["0"] = "０",
+        ["1"] = "１",
+        ["2"] = "２",
+        ["3"] = "３",
+        ["4"] = "４",
+        ["5"] = "５",
+        ["6"] = "６",
+        ["7"] = "７",
+        ["8"] = "８",
+        ["9"] = "９",
         [" "] = " "
     }
 
-    local canSend = true
-    local cooldownTime = 2 -- Cooldown in seconds
-
-    local function replace(str, find_str, replace_str)
-        local escaped_find_str = find_str:gsub("[%-%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0")
-        return str:gsub(escaped_find_str, replace_str)
-    end
-
+    -- Replace characters based on mapping
     local function filter(message)
-        for search, replacement in pairs(letters) do
-            message = replace(message, search, replacement)
+        local result = ""
+        for i = 1, #message do
+            local c = message:sub(i, i)
+            result = result .. (letters[c] or c)
         end
-        return message
+        return result
     end
 
+    -- Show notification
     local function showNotification(title, text)
-        StarterGui:SetCore("SendNotification", {
-            Title = title,
-            Text = text,
-            Duration = 3
-        })
-    end
-
-    local function startCooldown()
-        canSend = false
-        task.delay(cooldownTime, function()
-            canSend = true
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = title,
+                Text = text,
+                Duration = 5
+            })
         end)
     end
 
-    local function isTagged(message)
-        -- Roblox tags fully censored messages with only #
-        return message:match("^#+$") ~= nil
-    end
-
+    -- Send chat using latest TextChatService
     local function sendChat(msg)
-        local channel = TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel
-        if not channel then
-            showNotification("Error", "No chat channel found!")
-            return
-        end
+        local success, result = pcall(function()
+            return TextChatService:FilterStringAsync(msg, LocalPlayer, chatChannel)
+        end)
 
-        channel:SendAsync(msg)
-        textBox.Text = ""
-        showNotification("Success", "Message sent!")
+        if success and result ~= msg then
+            -- Filtered text changed
+            showNotification("HELL NAH !!", "TEXT FUCKED")
+            textBox.Text = ""
+        else
+            -- Send to chat
+            if chatChannel then
+                chatChannel:SendAsync(msg)
+            end
+            textBox.Text = ""
+        end
     end
 
+    -- Main logic
     local function processText()
-        if not canSend then
-            showNotification("Cooldown", "Please wait before sending another message.")
-            return
-        end
-
         local inputText = textBox.Text
-        if inputText and inputText ~= "" then
-            local convertedText = filter(inputText)
-
-            -- Safe filtering using TextChatService (async)
-            TextChatService:FilterStringAsync(convertedText, LocalPlayer):andThen(function(filteredText)
-                if isTagged(filteredText) then
-                    showNotification("Blocked", "Your message was tagged and not sent.")
-                else
-                    sendChat(convertedText)
-                    startCooldown()
-                end
-            end):catch(function()
-                showNotification("Error", "Failed to filter the message.")
-            end)
-        end
+        local convertedText = filter(inputText)
+        sendChat(convertedText)
     end
 
-    -- Button click
+    -- Events
     textButton.MouseButton1Click:Connect(processText)
-
-    -- Press Enter
     textBox.FocusLost:Connect(function(enterPressed)
         if enterPressed then
             processText()
         end
     end)
 end
+
 task.spawn(C_a)
+
 local function C_11()
     local script = G2L["11"]
     local main = script.Parent.Parent.ImageLabel
