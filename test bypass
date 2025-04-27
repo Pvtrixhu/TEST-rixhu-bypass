@@ -315,7 +315,13 @@ local function C_14()
     -- Save original background color
     local originalColor = main.BackgroundColor3
 
+    -- Boolean to check if animation is already running
+    local isAnimating = false
+
     button.MouseButton1Click:Connect(function()
+        if isAnimating then return end -- Prevent toggling while an animation is in progress
+        isAnimating = true
+
         minimized = not minimized
 
         if minimized then
@@ -352,6 +358,7 @@ local function C_14()
                 if specialImage then
                     specialImage.Visible = true
                 end
+                isAnimating = false -- Animation finished, allow toggle again
             end)
         end
     end)
