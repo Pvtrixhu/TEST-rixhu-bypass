@@ -160,80 +160,48 @@ local function C_a()
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     local TextChatService = game:GetService("TextChatService")
-    local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local StarterGui = game:GetService("StarterGui")
     local textButton = script.Parent
     local textBox = script.Parent.Parent.TextBox
     local chat = TextChatService.ChatInputBarConfiguration.TargetTextChannel
+
+    local letters = {
+        ["A"] = "🅰", ["a"] = "🅰",
+        ["B"] = "🅱", ["b"] = "🅱",
+        ["C"] = "🅲", ["c"] = "🅲",
+        ["D"] = "🅳", ["d"] = "🅳",
+        ["E"] = "🅴", ["e"] = "🅴",
+        ["F"] = "🅵", ["f"] = "🅵",
+        ["G"] = "🅶", ["g"] = "🅶",
+        ["H"] = "🅷", ["h"] = "🅷",
+        ["I"] = "🅸", ["i"] = "🅸",
+        ["J"] = "🅹", ["j"] = "🅹",
+        ["K"] = "🅺", ["k"] = "🅺",
+        ["L"] = "🅻", ["l"] = "🅻",
+        ["M"] = "🅼", ["m"] = "🅼",
+        ["N"] = "🅽", ["n"] = "🅽",
+        ["O"] = "🅾", ["o"] = "🅾",
+        ["P"] = "🅿", ["p"] = "🅿",
+        ["Q"] = "🆀", ["q"] = "🆀",
+        ["R"] = "🆁", ["r"] = "🆁",
+        ["S"] = "🆂", ["s"] = "🆂",
+        ["T"] = "🆃", ["t"] = "🆃",
+        ["U"] = "🆄", ["u"] = "🆄",
+        ["V"] = "🆅", ["v"] = "🆅",
+        ["W"] = "🆆", ["w"] = "🆆",
+        ["X"] = "🆇", ["x"] = "🆇",
+        ["Y"] = "🆈", ["y"] = "🆈",
+        ["Z"] = "🆉", ["z"] = "🆉",
+        ["0"] = "０", ["1"] = "１", ["2"] = "２", ["3"] = "３",
+        ["4"] = "４", ["5"] = "５", ["6"] = "６", ["7"] = "７",
+        ["8"] = "８", ["9"] = "９",
+        [" "] = " "
+    }
+
     local function replace(str, find_str, replace_str)
         local escaped_find_str = find_str:gsub("[%-%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0")
         return str:gsub(escaped_find_str, replace_str)
     end
-local letters = {
-    ["A"] = "🅰",
-    ["a"] = "🅰",
-    ["B"] = "🅱",
-    ["b"] = "🅱",
-    ["C"] = "🅲",
-    ["c"] = "🅲",
-    ["D"] = "🅳",
-    ["d"] = "🅳",
-    ["E"] = "🅴",
-    ["e"] = "🅴",
-    ["F"] = "🅵",
-    ["f"] = "🅵",
-    ["G"] = "🅶",
-    ["g"] = "🅶",
-    ["H"] = "🅷",
-    ["h"] = "🅷",
-    ["I"] = "🅸",
-    ["i"] = "🅸",
-    ["J"] = "🅹",
-    ["j"] = "🅹",
-    ["K"] = "🅺",
-    ["k"] = "🅺",
-    ["L"] = "🅻",
-    ["l"] = "🅻",
-    ["M"] = "🅼",
-    ["m"] = "🅼",
-    ["N"] = "🅽",
-    ["n"] = "🅽",
-    ["O"] = "🅾",
-    ["o"] = "🅾",
-    ["P"] = "🅿",
-    ["p"] = "🅿",
-    ["Q"] = "🆀",
-    ["q"] = "🆀",
-    ["R"] = "🆁",
-    ["r"] = "🆁",
-    ["S"] = "🆂",
-    ["s"] = "🆂",
-    ["T"] = "🆃",
-    ["t"] = "🆃",
-    ["U"] = "🆄",
-    ["u"] = "🆄",
-    ["V"] = "🆅",
-    ["v"] = "🆅",
-    ["W"] = "🆆",
-    ["w"] = "🆆",
-    ["X"] = "🆇",
-    ["x"] = "🆇",
-    ["Y"] = "🆈",
-    ["y"] = "🆈",
-    ["Z"] = "🆉",
-    ["z"] = "🆉",
-    ["0"] = "０",
-    ["1"] = "１",
-    ["2"] = "２",
-    ["3"] = "３",
-    ["4"] = "４",
-    ["5"] = "５",
-    ["6"] = "６",
-    ["7"] = "７",
-    ["8"] = "８",
-    ["9"] = "９",
-    [" "] = " "
-}
 
     local function filter(message)
         for search, replacement in pairs(letters) do
@@ -241,37 +209,35 @@ local letters = {
         end
         return message
     end
+
     local function showNotification(title, text)
         StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
+
     local function sendChat(msg)
-        local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
-        local tagged = filteredMessage ~= msg
-        if tagged then
-            showNotification("HELL NAH !!", "TEXT FUCKED")
+        local channel = TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel
+        if channel then
+            channel:SendAsync(msg)
             textBox.Text = ""
         else
-            if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
-                ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
-            else
-                chat:SendAsync(msg)
-            end
-            textBox.Text = ""
+            showNotification("Error", "No chat channel found!")
         end
     end
+
     local function processText()
         local inputText = textBox.Text
-        local convertedText = filter(inputText)
-        sendChat(convertedText)
-    end
-    textButton.MouseButton1Click:Connect(processText)
-    textBox.FocusLost:Connect(
-        function(enterPressed)
-            if enterPressed then
-                processText()
-            end
+        if inputText and inputText ~= "" then
+            local convertedText = filter(inputText)
+            sendChat(convertedText)
         end
-    )
+    end
+
+    textButton.MouseButton1Click:Connect(processText)
+    textBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            processText()
+        end
+    end)
 end
 task.spawn(C_a)
 local function C_11()
