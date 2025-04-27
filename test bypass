@@ -295,10 +295,19 @@ local function C_14()
     local minimized = false
     local tweenService = game:GetService("TweenService")
 
-    -- Get all parts to hide
+    -- Find the specific ImageLabel you want to hide/show
+    local imageToHide
+    for _, child in ipairs(main:GetDescendants()) do
+        if child:IsA("ImageLabel") and child.Image == "rbxassetid://113532136902880" then
+            imageToHide = child
+            break
+        end
+    end
+
+    -- Get all Text objects to hide/show (but not the minimize button)
     local contentToToggle = {}
     for _, child in ipairs(main:GetDescendants()) do
-        if child:IsA("TextBox") or child:IsA("TextButton") or child:IsA("TextLabel") then
+        if (child:IsA("TextBox") or child:IsA("TextButton") or child:IsA("TextLabel")) and child ~= button then
             table.insert(contentToToggle, child)
         end
     end
@@ -307,11 +316,13 @@ local function C_14()
         minimized = not minimized
 
         if minimized then
-            -- Hide content
+            -- Hide texts
             for _, ui in ipairs(contentToToggle) do
-                if ui ~= button then -- Don't hide the minimize button itself
-                    ui.Visible = false
-                end
+                ui.Visible = false
+            end
+            -- Hide specific Image
+            if imageToHide then
+                imageToHide.Visible = false
             end
 
             -- Animate frame smaller
@@ -326,12 +337,13 @@ local function C_14()
             local tween = tweenService:Create(main, tweenInfo, goal)
             tween:Play()
 
-            -- After animation, show content again
-            tween.Completed:Connect(function()
+            -- After expansion, show texts and image
+            tween.Completed:Once(function()
                 for _, ui in ipairs(contentToToggle) do
-                    if ui ~= button then
-                        ui.Visible = true
-                    end
+                    ui.Visible = true
+                end
+                if imageToHide then
+                    imageToHide.Visible = true
                 end
             end)
         end
@@ -339,5 +351,5 @@ local function C_14()
 end
 task.spawn(C_14)
 
-
 return G2L["1"], require
+
