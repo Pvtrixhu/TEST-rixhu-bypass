@@ -102,11 +102,10 @@ G2L["12"]["Size"] = UDim2.new(0, 20, 0, 20)
 G2L["12"]["BackgroundTransparency"] = 0.3
 G2L["12"]["BorderColor3"] = Color3.fromRGB(255, 255, 255)
 G2L["12"]["Text"] = "_"
-G2L["12"]["Position"] = UDim2.new(1, -25, 0, 5) -- Top right corner of frame
+G2L["12"]["Position"] = UDim2.new(1, -25, 0, 5)
 G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
-
 
 local function C_3()
     local script = G2L["3"]
@@ -291,20 +290,54 @@ end
 task.spawn(C_11)
 local function C_14()
     local script = G2L["14"]
-    local main = script.Parent.Parent
+    local main = script.Parent.Parent -- The Frame
     local button = script.Parent
     local minimized = false
-    local originalSize = main.Size
+    local tweenService = game:GetService("TweenService")
+
+    -- Get all parts to hide
+    local contentToToggle = {}
+    for _, child in ipairs(main:GetDescendants()) do
+        if child:IsA("TextBox") or child:IsA("TextButton") or child:IsA("TextLabel") then
+            table.insert(contentToToggle, child)
+        end
+    end
 
     button.MouseButton1Click:Connect(function()
         minimized = not minimized
+
         if minimized then
-            main.Size = UDim2.new(0, 120, 0, 30) -- Small bar
+            -- Hide content
+            for _, ui in ipairs(contentToToggle) do
+                if ui ~= button then -- Don't hide the minimize button itself
+                    ui.Visible = false
+                end
+            end
+
+            -- Animate frame smaller
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            local goal = {Size = UDim2.new(0, 120, 0, 30)}
+            local tween = tweenService:Create(main, tweenInfo, goal)
+            tween:Play()
         else
-            main.Size = originalSize
+            -- Animate back to original size
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            local goal = {Size = UDim2.new(0, 316, 0, 128)}
+            local tween = tweenService:Create(main, tweenInfo, goal)
+            tween:Play()
+
+            -- After animation, show content again
+            tween.Completed:Connect(function()
+                for _, ui in ipairs(contentToToggle) do
+                    if ui ~= button then
+                        ui.Visible = true
+                    end
+                end
+            end)
         end
     end)
 end
 task.spawn(C_14)
+
 
 return G2L["1"], require
