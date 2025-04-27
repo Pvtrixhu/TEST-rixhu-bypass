@@ -106,6 +106,32 @@ G2L["12"]["Position"] = UDim2.new(1, -25, 0, 5)
 G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
+G2L["15"] = Instance.new("TextButton", G2L["2"])
+G2L["15"]["Name"] = "KeepTextToggle"
+G2L["15"]["Size"] = UDim2.new(0, 18, 0, 18)
+G2L["15"]["Position"] = UDim2.new(1, -22, 1, -22)
+G2L["15"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+G2L["15"]["Text"] = ""
+G2L["15"]["BorderSizePixel"] = 0
+G2L["16"] = Instance.new("UICorner", G2L["15"])
+G2L["16"]["CornerRadius"] = UDim.new(0, 2)
+G2L["17"] = Instance.new("LocalScript", G2L["15"])
+G2L["17"] = local button = script.Parent
+local checked = false
+
+button.MouseButton1Click:Connect(function()
+    checked = not checked
+    if checked then
+        button.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Green when ON
+    else
+        button.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White when OFF
+    end
+end)
+
+-- Expose the "checked" value to global
+button:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+    _G.KeepText = checked
+end)
 
 local function C_3()
     local script = G2L["3"]
@@ -160,119 +186,122 @@ local function C_a()
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     local TextChatService = game:GetService("TextChatService")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local StarterGui = game:GetService("StarterGui")
     local textButton = script.Parent
     local textBox = script.Parent.Parent.TextBox
-    local chatChannel = TextChatService:WaitForChild("ChatInputBarConfiguration").TargetTextChannel
+    local chat = TextChatService.ChatInputBarConfiguration.TargetTextChannel
+    local function replace(str, find_str, replace_str)
+        local escaped_find_str = find_str:gsub("[%-%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0")
+        return str:gsub(escaped_find_str, replace_str)
+    end
+local letters = {
+    ["A"] = "🅰",
+    ["a"] = "🅰",
+    ["B"] = "🅱",
+    ["b"] = "🅱",
+    ["C"] = "🅲",
+    ["c"] = "🅲",
+    ["D"] = "🅳",
+    ["d"] = "🅳",
+    ["E"] = "🅴",
+    ["e"] = "🅴",
+    ["F"] = "🅵",
+    ["f"] = "🅵",
+    ["G"] = "🅶",
+    ["g"] = "🅶",
+    ["H"] = "🅷",
+    ["h"] = "🅷",
+    ["I"] = "🅸",
+    ["i"] = "🅸",
+    ["J"] = "🅹",
+    ["j"] = "🅹",
+    ["K"] = "🅺",
+    ["k"] = "🅺",
+    ["L"] = "🅻",
+    ["l"] = "🅻",
+    ["M"] = "🅼",
+    ["m"] = "🅼",
+    ["N"] = "🅽",
+    ["n"] = "🅽",
+    ["O"] = "🅾",
+    ["o"] = "🅾",
+    ["P"] = "🅿",
+    ["p"] = "🅿",
+    ["Q"] = "🆀",
+    ["q"] = "🆀",
+    ["R"] = "🆁",
+    ["r"] = "🆁",
+    ["S"] = "🆂",
+    ["s"] = "🆂",
+    ["T"] = "🆃",
+    ["t"] = "🆃",
+    ["U"] = "🆄",
+    ["u"] = "🆄",
+    ["V"] = "🆅",
+    ["v"] = "🆅",
+    ["W"] = "🆆",
+    ["w"] = "🆆",
+    ["X"] = "🆇",
+    ["x"] = "🆇",
+    ["Y"] = "🆈",
+    ["y"] = "🆈",
+    ["Z"] = "🆉",
+    ["z"] = "🆉",
+    ["0"] = "０",
+    ["1"] = "１",
+    ["2"] = "２",
+    ["3"] = "３",
+    ["4"] = "４",
+    ["5"] = "５",
+    ["6"] = "６",
+    ["7"] = "７",
+    ["8"] = "８",
+    ["9"] = "９",
+    [" "] = " "
+}
 
-    -- Character mapping
-    local letters = {
-        ["A"] = "🅰", ["a"] = "🅰",
-        ["B"] = "🅱", ["b"] = "🅱",
-        ["C"] = "🅲", ["c"] = "🅲",
-        ["D"] = "🅳", ["d"] = "🅳",
-        ["E"] = "🅴", ["e"] = "🅴",
-        ["F"] = "🅵", ["f"] = "🅵",
-        ["G"] = "🅶", ["g"] = "🅶",
-        ["H"] = "🅷", ["h"] = "🅷",
-        ["I"] = "🅸", ["i"] = "🅸",
-        ["J"] = "🅹", ["j"] = "🅹",
-        ["K"] = "🅺", ["k"] = "🅺",
-        ["L"] = "🅻", ["l"] = "🅻",
-        ["M"] = "🅼", ["m"] = "🅼",
-        ["N"] = "🅽", ["n"] = "🅽",
-        ["O"] = "🅾", ["o"] = "🅾",
-        ["P"] = "🅿", ["p"] = "🅿",
-        ["Q"] = "🆀", ["q"] = "🆀",
-        ["R"] = "🆁", ["r"] = "🆁",
-        ["S"] = "🆂", ["s"] = "🆂",
-        ["T"] = "🆃", ["t"] = "🆃",
-        ["U"] = "🆄", ["u"] = "🆄",
-        ["V"] = "🆅", ["v"] = "🆅",
-        ["W"] = "🆆", ["w"] = "🆆",
-        ["X"] = "🆇", ["x"] = "🆇",
-        ["Y"] = "🆈", ["y"] = "🆈",
-        ["Z"] = "🆉", ["z"] = "🆉",
-        ["0"] = "０",
-        ["1"] = "１",
-        ["2"] = "２",
-        ["3"] = "３",
-        ["4"] = "４",
-        ["5"] = "５",
-        ["6"] = "６",
-        ["7"] = "７",
-        ["8"] = "８",
-        ["9"] = "９",
-        [" "] = " "
-    }
-
-    -- Replace characters based on mapping
     local function filter(message)
-        local result = ""
-        for i = 1, #message do
-            local c = message:sub(i, i)
-            result = result .. (letters[c] or c)
+        for search, replacement in pairs(letters) do
+            message = replace(message, search, replacement)
         end
-        return result
+        return message
     end
-
-    -- Show notification
     local function showNotification(title, text)
-        pcall(function()
-            StarterGui:SetCore("SendNotification", {
-                Title = title,
-                Text = text,
-                Duration = 5
-            })
-        end)
+        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
-
-    -- Send chat using latest TextChatService
     local function sendChat(msg)
-        local success, filteredText = pcall(function()
-            return TextChatService:FilterStringAsync(msg, LocalPlayer, chatChannel)
-        end)
-
-        if success then
-            -- Check if text got changed by the filter
-            if filteredText ~= msg then
-                showNotification("Message Blocked", "Your message was filtered!")
-                textBox.Text = ""
-            else
-                -- Text clean, send it
-                if chatChannel then
-                    chatChannel:SendAsync(msg)
-                end
-                textBox.Text = ""
-            end
-        else
-            -- Filtering failed (unlikely, but handle it safely)
-            showNotification("Error", "Failed to filter message.")
-            textBox.Text = ""
-        end
+        local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+        local tagged = filteredMessage ~= msg
+       if tagged then
+    showNotification("HELL NAH !!", "TEXT FUCKED")
+    textBox.Text = ""
+else
+    if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
+        ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
+    else
+        chat:SendAsync(msg)
     end
 
-    -- Main logic
+    if not _G.KeepText then
+        textBox.Text = ""
+    end
+end
     local function processText()
         local inputText = textBox.Text
         local convertedText = filter(inputText)
-        if convertedText ~= "" then
-            sendChat(convertedText)
-        end
+        sendChat(convertedText)
     end
-
-    -- Events
     textButton.MouseButton1Click:Connect(processText)
-    textBox.FocusLost:Connect(function(enterPressed)
-        if enterPressed then
-            processText()
+    textBox.FocusLost:Connect(
+        function(enterPressed)
+            if enterPressed then
+                processText()
+            end
         end
-    end)
+    )
 end
-
 task.spawn(C_a)
-
-
 local function C_11()
     local script = G2L["11"]
     local main = script.Parent.Parent.ImageLabel
