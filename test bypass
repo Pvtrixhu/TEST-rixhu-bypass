@@ -336,7 +336,7 @@ local function C_14()
             tween:Play()
 
         else
-            -- Animate back to full size and original color
+            -- Animate back to full size and change color
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 316, 0, 128),
