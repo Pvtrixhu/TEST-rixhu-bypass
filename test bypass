@@ -315,20 +315,6 @@ local function C_14()
     -- Save original background color
     local originalColor = main.BackgroundColor3
 
-    -- Create a new TextLabel for "RIXHU" in bold, only when minimized
-    local rixhuText
-    local function createRixhuText()
-        rixhuText = Instance.new("TextLabel")
-        rixhuText.Size = UDim2.new(1, 0, 1, 0) -- Make the text fill the minimized frame
-        rixhuText.Position = UDim2.new(0, 0, 0, 0)
-        rixhuText.Text = "RIXHU"
-        rixhuText.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text color
-        rixhuText.TextSize = 16
-        rixhuText.TextBold = true
-        rixhuText.BackgroundTransparency = 1
-        rixhuText.Parent = main
-    end
-
     button.MouseButton1Click:Connect(function()
         minimized = not minimized
 
@@ -341,10 +327,7 @@ local function C_14()
                 specialImage.Visible = false
             end
 
-            -- Create the "RIXHU" text label when minimized
-            createRixhuText()
-
-            -- Animate frame smaller and change color to black
+            -- Animate frame smaller and change color
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 120, 0, 30),
@@ -353,11 +336,11 @@ local function C_14()
             tween:Play()
 
         else
-            -- Animate back to full size and original color
+            -- Animate back to full size and change color
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 316, 0, 128),
-                BackgroundColor3 = originalColor  -- Fix: Set it back to the original color
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             })
             tween:Play()
 
@@ -368,11 +351,6 @@ local function C_14()
                 end
                 if specialImage then
                     specialImage.Visible = true
-                end
-
-                -- Remove the "RIXHU" text when not minimized
-                if rixhuText then
-                    rixhuText:Destroy()
                 end
             end)
         end
