@@ -249,15 +249,15 @@ local letters = {
         local tagged = filteredMessage ~= msg
         if tagged then
             showNotification("HELL NAH !!", "TEXT FUCKED")
-        textbox.Text = ""
-end
+            textBox.Text = ""
         else
             if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
                 ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
             else
                 chat:SendAsync(msg)
             end
-    textbox.Text = ""
+            textBox.Text = ""
+        end
     end
     local function processText()
         local inputText = textBox.Text
@@ -357,6 +357,5 @@ local function C_14()
     end)
 end
 task.spawn(C_14)
-
 
 return G2L["1"], require
