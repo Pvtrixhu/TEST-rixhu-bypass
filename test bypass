@@ -316,7 +316,24 @@ local function C_14()
     local main = script.Parent.Parent -- The Frame
     local button = script.Parent
     local minimized = false
-    local tweenService = game:GetService("TweenService")
+G2L["a"].MouseButton1Click:Connect(function()
+    local inputText = G2L["9"].Text
+    local convertedText = G2L["1"].filter(inputText)
+    G2L["1"].sendChat(convertedText)
+
+    -- Find the checkbox and tick
+    local checkbox = G2L["b"] -- The Frame (checkbox background)
+    local tick = checkbox:FindFirstChild("Tick")
+
+    -- Check if the tick is transparent (unchecked)
+    if tick and tick.TextTransparency == 1 then
+        -- If unchecked, clear text
+        G2L["9"].Text = ""
+    else
+        -- If checked, do not clear text
+    end
+end)    
+local tweenService = game:GetService("TweenService")
 
     -- Find the special ImageLabel
     local specialImage
