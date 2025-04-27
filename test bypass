@@ -1,19 +1,33 @@
 local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
 
-local startupSound = Instance.new("Sound")
-startupSound.SoundId = "rbxassetid://506001681"
-startupSound.Volume = 1
-startupSound.Name = "StartupSound"
-startupSound.Looped = false
-startupSound.RollOffMode = Enum.RollOffMode.Linear
-startupSound.RollOffMaxDistance = math.huge -- <-- makes it global
-startupSound.Parent = SoundService
+local StartupSound = Instance.new("Sound")
+StartupSound.SoundId = "rbxassetid://506001681"
+StartupSound.Volume = 1
+StartupSound.Parent = SoundService
 
-startupSound:Play()
+StartupSound:Play()
 
--- Clean up after it finishes
-startupSound.Ended:Connect(function()
-    startupSound:Destroy()
+local function fadeOutSound(sound, fadeTime)
+    local startTime = tick()
+    local startVolume = sound.Volume
+
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        local elapsed = tick() - startTime
+        local alpha = math.clamp(elapsed / fadeTime, 0, 1)
+        sound.Volume = startVolume * (1 - alpha)
+
+        if alpha >= 1 then
+            connection:Disconnect()
+            sound:Stop()
+            sound:Destroy()
+        end
+    end)
+end
+
+StartupSound.Ended:Connect(function()
+    fadeOutSound(StartupSound, 2) -- 2 seconds fade out
 end)
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
