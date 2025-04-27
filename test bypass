@@ -2,7 +2,8 @@ local SoundService = game:GetService("SoundService")
 local StartupSound = Instance.new("Sound")
 StartupSound.SoundId = "rbxassetid://506001681"
 StartupSound.Volume = 1
-StartupSound.Parent = SoundService
+StartupSound.Name = "StartupSound"
+StartupSound.Parent = SoundService -- or workspace
 StartupSound:Play()
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
