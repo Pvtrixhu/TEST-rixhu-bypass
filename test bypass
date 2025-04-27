@@ -206,26 +206,48 @@ local function C_a()
         [" "] = " "
     }
 
+    -- Replace characters based on mapping
     local function filter(message)
-        for search, replacement in pairs(letters) do
-            message = replace(message, search, replacement)
+        local result = ""
+        for i = 1, #message do
+            local c = message:sub(i, i)
+            result = result .. (letters[c] or c)
         end
-        return message
+        return result
     end
+
+    -- Show notification
     local function showNotification(title, text)
-        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = title,
+                Text = text,
+                Duration = 5
+            })
+        end)
     end
+
+    -- Send chat using latest TextChatService
     local function sendChat(msg)
-        local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
-        local tagged = filteredMessage ~= msg
-        if tagged then
-            showNotification("HELL NAH !!", "TEXT FUCKED")
-            textBox.Text = ""
-        else
-            -- Send to chat
-            if chatChannel then
-                chatChannel:SendAsync(msg)
+        local success, filteredText = pcall(function()
+            return TextChatService:FilterStringAsync(msg, LocalPlayer, chatChannel)
+        end)
+
+        if success then
+            -- Check if text got changed by the filter
+            if filteredText ~= msg then
+                showNotification("Message Blocked", "Your message was filtered!")
+                textBox.Text = ""
+            else
+                -- Text clean, send it
+                if chatChannel then
+                    chatChannel:SendAsync(msg)
+                end
+                textBox.Text = ""
             end
+        else
+            -- Filtering failed (unlikely, but handle it safely)
+            showNotification("Error", "Failed to filter message.")
             textBox.Text = ""
         end
     end
@@ -234,7 +256,9 @@ local function C_a()
     local function processText()
         local inputText = textBox.Text
         local convertedText = filter(inputText)
-        sendChat(convertedText)
+        if convertedText ~= "" then
+            sendChat(convertedText)
+        end
     end
 
     -- Events
@@ -247,6 +271,7 @@ local function C_a()
 end
 
 task.spawn(C_a)
+
 
 local function C_11()
     local script = G2L["11"]
