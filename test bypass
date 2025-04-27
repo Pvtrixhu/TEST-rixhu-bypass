@@ -340,7 +340,7 @@ local function C_14()
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 316, 0, 128),
-                BackgroundColor3 = originalColor
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             })
             tween:Play()
 
