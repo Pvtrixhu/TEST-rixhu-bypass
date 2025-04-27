@@ -315,7 +315,7 @@ local function C_14()
     local script = G2L["14"]
     local main = script.Parent.Parent -- The Frame
     local button = script.Parent
-    local minimized = false    
+    local minimized = false
     local tweenService = game:GetService("TweenService")
 
     -- Find the special ImageLabel
