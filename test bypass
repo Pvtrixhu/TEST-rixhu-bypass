@@ -1,4 +1,3 @@
-
    local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
@@ -107,6 +106,29 @@ G2L["12"]["Position"] = UDim2.new(1, -25, 0, 5)
 G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
+G2L["15"] = Instance.new("TextButton", G2L["2"])
+G2L["15"]["Name"] = "KeepTextCheckbox"
+G2L["15"]["Size"] = UDim2.new(0, 20, 0, 20)
+G2L["15"]["Position"] = UDim2.new(1, -25, 1, -25)
+G2L["15"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
+G2L["15"]["BackgroundTransparency"] = 0.2
+G2L["15"]["Text"] = ""
+G2L["15"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+G2L["15"]["TextSize"] = 14
+G2L["15"]["Font"] = Enum.Font.SourceSansBold
+G2L["15"]["Visible"] = true
+G2L["16"] = Instance.new("UICorner", G2L["15"])
+G2L["16"]["CornerRadius"] = UDim.new(0, 3)
+G2L["17"] = Instance.new("TextLabel", G2L["15"])
+G2L["17"]["Name"] = "Tick"
+G2L["17"]["Size"] = UDim2.new(1, 0, 1, 0)
+G2L["17"]["BackgroundTransparency"] = 1
+G2L["17"]["Text"] = "✓"
+G2L["17"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
+G2L["17"]["TextTransparency"] = 1
+G2L["17"]["Font"] = Enum.Font.SourceSansBold
+G2L["17"]["TextScaled"] = true
+G2L["18"] = Instance.new("LocalScript", G2L["15"])
 
 local function C_3()
     local script = G2L["3"]
@@ -358,32 +380,6 @@ local function C_14()
     end)
 end
 task.spawn(C_14)
-
-return G2L["1"], require
-G2L["15"] = Instance.new("TextButton", G2L["2"])
-G2L["15"]["Name"] = "KeepTextCheckbox"
-G2L["15"]["Size"] = UDim2.new(0, 20, 0, 20)
-G2L["15"]["Position"] = UDim2.new(1, -25, 1, -25)
-G2L["15"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
-G2L["15"]["BackgroundTransparency"] = 0.2
-G2L["15"]["Text"] = ""
-G2L["15"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["15"]["TextSize"] = 14
-G2L["15"]["Font"] = Enum.Font.SourceSansBold
-G2L["15"]["Visible"] = true
-G2L["16"] = Instance.new("UICorner", G2L["15"])
-G2L["16"]["CornerRadius"] = UDim.new(0, 3)
-G2L["17"] = Instance.new("TextLabel", G2L["15"])
-G2L["17"]["Name"] = "Tick"
-G2L["17"]["Size"] = UDim2.new(1, 0, 1, 0)
-G2L["17"]["BackgroundTransparency"] = 1
-G2L["17"]["Text"] = "✓"
-G2L["17"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
-G2L["17"]["TextTransparency"] = 1
-G2L["17"]["Font"] = Enum.Font.SourceSansBold
-G2L["17"]["TextScaled"] = true
-G2L["18"] = Instance.new("LocalScript", G2L["15"])
-
 local function C_18()
     local script = G2L["18"]
     local button = script.Parent
@@ -418,3 +414,5 @@ local function C_18()
     end)
 end
 task.spawn(C_18)
+
+return G2L["1"], require
