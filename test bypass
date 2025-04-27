@@ -125,7 +125,7 @@ G2L["17"]["Size"] = UDim2.new(1, 0, 1, 0)
 G2L["17"]["BackgroundTransparency"] = 1
 G2L["17"]["Text"] = "✓"
 G2L["17"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
-G2L["17"]["TextTransparency"] = 1
+G2L["17"]["TextTransparency"] = 1 -- Start hidden
 G2L["17"]["Font"] = Enum.Font.SourceSansBold
 G2L["17"]["TextScaled"] = true
 G2L["18"] = Instance.new("LocalScript", G2L["15"])
@@ -384,7 +384,7 @@ local function C_18()
     local script = G2L["18"]
     local button = script.Parent
     local tick = button:WaitForChild("Tick")
-    local keepText = true
+    local keepText = false -- Start UNCHECKED
 
     local TweenService = game:GetService("TweenService")
     local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -401,15 +401,17 @@ local function C_18()
         updateTick()
     end)
 
-    -- Patch the send button behavior
-    local sendButtonScript = G2L["a"]  -- assuming your send button is ["a"]
+    -- Hook into your send button
+    local sendButtonScript = G2L["a"] -- assuming your send button is ["a"]
     sendButtonScript.Parent.MouseButton1Click:Connect(function()
-        local inputText = sendButtonScript.Parent.Parent.TextBox.Text
+        local textBox = sendButtonScript.Parent.Parent.TextBox
+        local inputText = textBox.Text
         local convertedText = sendButtonScript.Parent.Parent.TextBox.Parent.Parent.filter(inputText)
         sendButtonScript.Parent.Parent.TextBox.Parent.Parent.sendChat(convertedText)
 
+        -- Only clear text if "keepText" is FALSE (unchecked)
         if not keepText then
-            sendButtonScript.Parent.Parent.TextBox.Text = ""
+            textBox.Text = ""
         end
     end)
 end
