@@ -333,7 +333,7 @@ local function C_14()
                 specialImage.Visible = false
             end
 
-            -- Animate frame smaller and change color
+            -- Animate frame smaller and change color to black
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 120, 0, 30),
@@ -342,23 +342,32 @@ local function C_14()
             tween:Play()
 
         else
-            -- Animate back to full size and original color
+            -- Animate back to full size
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             local tween = tweenService:Create(main, tweenInfo, {
                 Size = UDim2.new(0, 316, 0, 128),
-                BackgroundColor3 = originalColor
             })
             tween:Play()
 
             tween.Completed:Connect(function()
-                -- Restore content after animation
+                -- After the frame size is restored, change the background color to red and show the content
+                local colorTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local colorTween = tweenService:Create(main, colorTweenInfo, {
+                    BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                })
+                colorTween:Play()
+
+                -- Restore content and special image after background color is set
                 for _, ui in ipairs(contentToToggle) do
                     ui.Visible = true
                 end
                 if specialImage then
                     specialImage.Visible = true
                 end
-                isAnimating = false -- Animation finished, allow toggle again
+
+                colorTween.Completed:Connect(function()
+                    isAnimating = false -- Animation finished, allow toggle again
+                end)
             end)
         end
     end)
