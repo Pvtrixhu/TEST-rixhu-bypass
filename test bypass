@@ -268,20 +268,28 @@ local letters = {
         StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
     local function sendChat(msg)
-        local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
-        local tagged = filteredMessage ~= msg
-        if tagged then
-            showNotification("HELL NAH !!", "TEXT FUCKED")
-            textBox.Text = ""
+    local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+    local tagged = filteredMessage ~= msg
+    local keepTextCheckbox = script.Parent.Parent.Parent:FindFirstChild("KeepTextCheckbox")
+    local keepTextTick = keepTextCheckbox and keepTextCheckbox:FindFirstChild("Tick")
+
+    if tagged then
+        showNotification("HELL NAH !!", "TEXT FUCKED")
+        textBox.Text = ""
+    else
+        if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
+            ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
         else
-            if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
-                ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
-            else
-                chat:SendAsync(msg)
-            end
+            chat:SendAsync(msg)
+        end
+        
+        -- ONLY clear if checkbox is NOT checked
+        if keepTextTick and keepTextTick.TextTransparency == 1 then
             textBox.Text = ""
         end
     end
+end
+
     local function processText()
         local inputText = textBox.Text
         local convertedText = filter(inputText)
