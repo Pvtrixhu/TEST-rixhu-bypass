@@ -206,33 +206,15 @@ local function C_a()
         [" "] = " "
     }
 
-    -- Replace characters based on mapping
     local function filter(message)
-        local result = ""
-        for i = 1, #message do
-            local c = message:sub(i, i)
-            result = result .. (letters[c] or c)
+        for search, replacement in pairs(letters) do
+            message = replace(message, search, replacement)
         end
-        return result
+        return message
     end
-
-    -- Show notification
     local function showNotification(title, text)
-        pcall(function()
-            StarterGui:SetCore("SendNotification", {
-                Title = title,
-                Text = text,
-                Duration = 5
-            })
-        end)
+        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
-
-    -- Send chat using latest TextChatService
-    local function sendChat(msg)
-        local success, result = pcall(function()
-            return TextChatService:FilterStringAsync(msg, LocalPlayer, chatChannel)
-        end)
-
     local function sendChat(msg)
         local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
         local tagged = filteredMessage ~= msg
