@@ -107,6 +107,24 @@ G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
 
+local toggle = script.Parent
+local autoClear = true -- Default: ON (clear automatically)
+
+toggle.MouseButton1Click:Connect(function()
+    autoClear = not autoClear
+
+    if autoClear then
+        toggle.Text = "☐" -- Unchecked box
+    else
+        toggle.Text = "☑" -- Checked box
+    end
+end)
+
+-- Save globally so chat send script can check it
+_G.AutoClearEnabled = function()
+    return autoClear
+end
+
 local function C_3()
     local script = G2L["3"]
     local UserInputService = game:GetService("UserInputService")
@@ -249,15 +267,18 @@ local letters = {
         local tagged = filteredMessage ~= msg
         if tagged then
             showNotification("HELL NAH !!", "TEXT FUCKED")
-            textBox.Text = ""
+            if _G.AutoClearEnabled == nil or _G.AutoClearEnabled() then
+    textbox.Text = ""
+end
         else
             if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
                 ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
             else
                 chat:SendAsync(msg)
             end
-            textBox.Text = ""
-        end
+            if _G.AutoClearEnabled == nil or _G.AutoClearEnabled() then
+    textbox.Text = ""
+end
     end
     local function processText()
         local inputText = textBox.Text
@@ -295,16 +316,16 @@ local function C_14()
     local minimized = false
     local tweenService = game:GetService("TweenService")
 
-    -- Find the specific ImageLabel you want to hide/show
-    local imageToHide
+    -- Find the special ImageLabel
+    local specialImage
     for _, child in ipairs(main:GetDescendants()) do
         if child:IsA("ImageLabel") and child.Image == "rbxassetid://113532136902880" then
-            imageToHide = child
+            specialImage = child
             break
         end
     end
 
-    -- Get all Text objects to hide/show (but not the minimize button)
+    -- Gather all UI elements to hide (except button and frame)
     local contentToToggle = {}
     for _, child in ipairs(main:GetDescendants()) do
         if (child:IsA("TextBox") or child:IsA("TextButton") or child:IsA("TextLabel")) and child ~= button then
@@ -312,38 +333,45 @@ local function C_14()
         end
     end
 
+    -- Save original background color
+    local originalColor = main.BackgroundColor3
+
     button.MouseButton1Click:Connect(function()
         minimized = not minimized
 
         if minimized then
-            -- Hide texts
+            -- Hide content
             for _, ui in ipairs(contentToToggle) do
                 ui.Visible = false
             end
-            -- Hide specific Image
-            if imageToHide then
-                imageToHide.Visible = false
+            if specialImage then
+                specialImage.Visible = false
             end
 
-            -- Animate frame smaller
+            -- Animate frame smaller and change color
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            local goal = {Size = UDim2.new(0, 120, 0, 30)}
-            local tween = tweenService:Create(main, tweenInfo, goal)
-            tween:Play()
-        else
-            -- Animate back to original size
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            local goal = {Size = UDim2.new(0, 316, 0, 128)}
-            local tween = tweenService:Create(main, tweenInfo, goal)
+            local tween = tweenService:Create(main, tweenInfo, {
+                Size = UDim2.new(0, 120, 0, 30),
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            })
             tween:Play()
 
-            -- After expansion, show texts and image
-            tween.Completed:Once(function()
+        else
+            -- Animate back to full size and original color
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            local tween = tweenService:Create(main, tweenInfo, {
+                Size = UDim2.new(0, 316, 0, 128),
+                BackgroundColor3 = originalColor
+            })
+            tween:Play()
+
+            tween.Completed:Connect(function()
+                -- Restore content after animation
                 for _, ui in ipairs(contentToToggle) do
                     ui.Visible = true
                 end
-                if imageToHide then
-                    imageToHide.Visible = true
+                if specialImage then
+                    specialImage.Visible = true
                 end
             end)
         end
@@ -351,5 +379,5 @@ local function C_14()
 end
 task.spawn(C_14)
 
-return G2L["1"], require
 
+return G2L["1"], require
