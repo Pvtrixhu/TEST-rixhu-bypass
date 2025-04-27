@@ -249,8 +249,7 @@ local letters = {
         local tagged = filteredMessage ~= msg
         if tagged then
             showNotification("HELL NAH !!", "TEXT FUCKED")
-            if _G.AutoClearEnabled == nil or _G.AutoClearEnabled() then
-    textbox.Text = ""
+        textbox.Text = ""
 end
         else
             if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
@@ -258,9 +257,7 @@ end
             else
                 chat:SendAsync(msg)
             end
-            if _G.AutoClearEnabled == nil or _G.AutoClearEnabled() then
     textbox.Text = ""
-end
     end
     local function processText()
         local inputText = textBox.Text
