@@ -107,24 +107,6 @@ G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
 
-local toggle = script.Parent
-local autoClear = true -- Default: ON (clear automatically)
-
-toggle.MouseButton1Click:Connect(function()
-    autoClear = not autoClear
-
-    if autoClear then
-        toggle.Text = "☐" -- Unchecked box
-    else
-        toggle.Text = "☑" -- Checked box
-    end
-end)
-
--- Save globally so chat send script can check it
-_G.AutoClearEnabled = function()
-    return autoClear
-end
-
 local function C_3()
     local script = G2L["3"]
     local UserInputService = game:GetService("UserInputService")
