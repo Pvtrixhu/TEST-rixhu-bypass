@@ -20,7 +20,7 @@ G2L["4"]["CornerRadius"] = UDim.new(0, 4)
 G2L["5"] = Instance.new("ImageLabel", G2L["2"])
 G2L["5"]["BorderSizePixel"] = 0
 G2L["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["5"]["Image"] = [[rbxassetid://113532136902880]]
+G2L["5"]["Image"] = [[rbxassetid://103434281255283]]
 G2L["5"]["Size"] = UDim2.new(0, 316, 0, 128)
 G2L["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
 G2L["5"]["LayoutOrder"] = -6
@@ -329,7 +329,7 @@ local function C_14()
     -- Find the special ImageLabel
     local specialImage
     for _, child in ipairs(main:GetDescendants()) do
-        if child:IsA("ImageLabel") and child.Image == "rbxassetid://113532136902880" then
+        if child:IsA("ImageLabel") and child.Image == "rbxassetid://103434281255283" then
             specialImage = child
             break
         end
