@@ -1,3 +1,4 @@
+
    local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
@@ -106,32 +107,6 @@ G2L["12"]["Position"] = UDim2.new(1, -25, 0, 5)
 G2L["13"] = Instance.new("UICorner", G2L["12"])
 G2L["13"]["CornerRadius"] = UDim.new(0, 2)
 G2L["14"] = Instance.new("LocalScript", G2L["12"])
-G2L["15"] = Instance.new("TextButton", G2L["2"])
-G2L["15"]["Name"] = "KeepTextToggle"
-G2L["15"]["Size"] = UDim2.new(0, 18, 0, 18)
-G2L["15"]["Position"] = UDim2.new(1, -22, 1, -22)
-G2L["15"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["15"]["Text"] = ""
-G2L["15"]["BorderSizePixel"] = 0
-G2L["16"] = Instance.new("UICorner", G2L["15"])
-G2L["16"]["CornerRadius"] = UDim.new(0, 2)
-G2L["17"] = Instance.new("LocalScript", G2L["15"])
-G2L["17"] = local button = script.Parent
-local checked = false
-
-button.MouseButton1Click:Connect(function()
-    checked = not checked
-    if checked then
-        button.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Green when ON
-    else
-        button.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White when OFF
-    end
-end)
-
--- Expose the "checked" value to global
-button:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
-    _G.KeepText = checked
-end)
 
 local function C_3()
     local script = G2L["3"]
@@ -273,20 +248,18 @@ local letters = {
     local function sendChat(msg)
         local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
         local tagged = filteredMessage ~= msg
-       if tagged then
-    showNotification("HELL NAH !!", "TEXT FUCKED")
-    textBox.Text = ""
-else
-    if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
-        ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
-    else
-        chat:SendAsync(msg)
+        if tagged then
+            showNotification("HELL NAH !!", "TEXT FUCKED")
+            textBox.Text = ""
+        else
+            if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
+                ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
+            else
+                chat:SendAsync(msg)
+            end
+            textBox.Text = ""
+        end
     end
-
-    if not _G.KeepText then
-        textBox.Text = ""
-    end
-end
     local function processText()
         local inputText = textBox.Text
         local convertedText = filter(inputText)
