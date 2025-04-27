@@ -1,10 +1,20 @@
 local SoundService = game:GetService("SoundService")
-local StartupSound = Instance.new("Sound")
-StartupSound.SoundId = "rbxassetid://506001681"
-StartupSound.Volume = 1
-StartupSound.Name = "StartupSound"
-StartupSound.Parent = SoundService -- or workspace
-StartupSound:Play()
+
+local startupSound = Instance.new("Sound")
+startupSound.SoundId = "rbxassetid://506001681"
+startupSound.Volume = 1
+startupSound.Name = "StartupSound"
+startupSound.Looped = false
+startupSound.RollOffMode = Enum.RollOffMode.Linear
+startupSound.RollOffMaxDistance = math.huge -- <-- makes it global
+startupSound.Parent = SoundService
+
+startupSound:Play()
+
+-- Clean up after it finishes
+startupSound.Ended:Connect(function()
+    startupSound:Destroy()
+end)
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
