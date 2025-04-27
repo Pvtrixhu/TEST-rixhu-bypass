@@ -233,8 +233,10 @@ local function C_a()
             return TextChatService:FilterStringAsync(msg, LocalPlayer, chatChannel)
         end)
 
-        if success and result ~= msg then
-            -- Filtered text changed
+    local function sendChat(msg)
+        local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+        local tagged = filteredMessage ~= msg
+        if tagged then
             showNotification("HELL NAH !!", "TEXT FUCKED")
             textBox.Text = ""
         else
