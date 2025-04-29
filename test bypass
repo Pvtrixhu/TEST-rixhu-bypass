@@ -44,24 +44,19 @@ splashSound.Looped = false
 splashSound.Parent = splashGui
 splashSound:Play()
 
--- Fade in effects
+-- Fade in visuals
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
--- Wait for most of the sound to finish
-splashSound.Loaded:Wait()
-local soundLength = splashSound.TimeLength
-local fadeOutDuration = 1.5
-task.wait(math.max(0, soundLength - fadeOutDuration))
+-- Wait fixed time, then fade out visuals only
+task.wait(3.5)
 
--- Fade out visuals and sound
-TweenService:Create(blur, TweenInfo.new(fadeOutDuration), {Size = 0}):Play()
-TweenService:Create(customOverlay, TweenInfo.new(fadeOutDuration), {ImageTransparency = 1}):Play()
-TweenService:Create(splashText, TweenInfo.new(fadeOutDuration), {TextTransparency = 1}):Play()
-TweenService:Create(splashSound, TweenInfo.new(fadeOutDuration), {Volume = 0}):Play()
+TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
+TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
+TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
 
-task.wait(fadeOutDuration)
+task.wait(1.5)
 
 blur:Destroy()
 splashGui:Destroy()
