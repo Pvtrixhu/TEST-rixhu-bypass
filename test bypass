@@ -9,7 +9,7 @@ splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
 local blur = Instance.new("BlurEffect")
-blur.Size = 25
+blur.Size = 24
 blur.Parent = Lighting
 
 local customOverlay = Instance.new("ImageLabel")
@@ -239,78 +239,49 @@ G2L["17"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
 G2L["17"]["TextTransparency"] = 1 -- Start hidden
 G2L["17"]["Font"] = Enum.Font.SourceSansBold
 G2L["17"]["TextScaled"] = true
-G2L["18"] = Instance.new("localscript", G2L["15"])
-G2L["19"] = Instance.new("TextButton");
-G2L["19"].Name = "SecondCheckbox";
-G2L["19"].Size = UDim2.new(0, 20, 0, 20);
-G2L["19"].BackgroundColor3 = Color3.fromRGB(50, 50, 50);
-G2L["19"].BorderSizePixel = 0;
-G2L["19"].Text = "";
-G2L["19"].AutoButtonColor = false;
+G2L["18"] = Instance.new("LocalScript", G2L["15"])
+-- G2L["19"] - Create new checkbox
+G2L["19"] = Instance.new("TextButton", G2L["2"])
+G2L["19"]["Name"] = "StyleToggleCheckbox"
+G2L["19"]["Size"] = UDim2.new(0, 20, 0, 20)
+G2L["19"]["Position"] = UDim2.new(1, -55, 1, -25) -- Position next to the other checkbox
+G2L["19"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
+G2L["19"]["BackgroundTransparency"] = 0.2
+G2L["19"]["Text"] = ""
+G2L["19"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+G2L["19"]["TextSize"] = 14
+G2L["19"]["Font"] = Enum.Font.SourceSansBold
+G2L["19"]["Visible"] = true
 
--- Tick mark inside checkbox
-G2L["23"] = Instance.new("ImageLabel");
-G2L["23"].Name = "SecondTick";
-G2L["23"].Size = UDim2.new(1, 0, 1, 0);
-G2L["23"].BackgroundTransparency = 1;
-G2L["23"].Image = "rbxassetid://3926307971"; -- Optional tick icon
-G2L["23"].ImageRectOffset = Vector2.new(628, 420);
-G2L["23"].ImageRectSize = Vector2.new(48, 48);
-G2L["23"].Parent = G2L["19"];
+-- UICorner for checkbox
+G2L["20"] = Instance.new("UICorner", G2L["19"])
+G2L["20"]["CornerRadius"] = UDim.new(0, 3)
 
--- Cooldown overlay label
-G2L["CooldownLabel"] = Instance.new("TextLabel");
-G2L["CooldownLabel"].Size = UDim2.new(1, 0, 1, 0);
-G2L["CooldownLabel"].BackgroundTransparency = 1;
-G2L["CooldownLabel"].TextColor3 = Color3.new(1, 1, 1);
-G2L["CooldownLabel"].TextScaled = true;
-G2L["CooldownLabel"].Font = Enum.Font.SourceSansBold;
-G2L["CooldownLabel"].Visible = false;
-G2L["CooldownLabel"].ZIndex = 10;
-G2L["CooldownLabel"].Parent = G2L["19"];
+-- Tick label (🌀 for style)
+G2L["21"] = Instance.new("TextLabel", G2L["19"])
+G2L["21"]["Name"] = "Tick"
+G2L["21"]["Size"] = UDim2.new(1, 0, 1, 0)
+G2L["21"]["BackgroundTransparency"] = 1
+G2L["21"]["Text"] = "🌀"
+G2L["21"]["TextColor3"] = Color3.fromRGB(0, 200, 255)
+G2L["21"]["TextTransparency"] = 1 -- Hidden by default
+G2L["21"]["Font"] = Enum.Font.SourceSansBold
+G2L["21"]["TextScaled"] = true
 
--- Scripted behavior
-local secondCheckbox = G2L["19"]
-local secondTick = G2L["23"]
-local cooldownText = G2L["CooldownLabel"]
+-- G2L["22"] - LocalScript to toggle styles
+G2L["22"] = Instance.new("LocalScript", G2L["19"])
+G2L["22"].Source = [[
+local checkbox = script.Parent
+local tick = checkbox:WaitForChild("Tick")
 
-local secondToggled = true
-local cooldownTime = 3
-local canToggle = true
+-- Communicate with global script
+_G.useAltLetters = false
 
-secondTick.Visible = true
-
-secondCheckbox.MouseButton1Click:Connect(function()
-	if not canToggle then return end
-
-	secondToggled = not secondToggled
-	secondTick.Visible = secondToggled
-
-	if secondToggled then
-		-- Send "21" to chat
-		local player = game.Players.LocalPlayer
-		local msg = "21"
-		game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents")
-			:WaitForChild("SayMessageRequest"):FireServer(msg, "All")
-
-		-- Start cooldown
-		canToggle = false
-		cooldownText.Visible = true
-
-		for i = cooldownTime, 1, -1 do
-			cooldownText.Text = tostring(i)
-			task.wait(1)
-		end
-
-		-- Reset state
-		cooldownText.Visible = false
-		secondToggled = true
-		secondTick.Visible = true
-		canToggle = true
-	end
+checkbox.MouseButton1Click:Connect(function()
+	_G.useAltLetters = not _G.useAltLetters
+	tick.TextTransparency = _G.useAltLetters and 0 or 1
 end)
-
-return G2L;
+]]
 
 local function C_3()
     local script = G2L["3"]
@@ -439,6 +410,80 @@ local letters = {
     ["9"] = "９",
     [" "] = " "
 }
+local altLetters = {
+    ["A"] = "🅰",
+    ["a"] = "🅰",
+    ["B"] = "🅱",
+    ["b"] = "🅱",
+    ["C"] = "🅲",
+    ["c"] = "🅲",
+    ["D"] = "🅳",
+    ["d"] = "🅳",
+    ["E"] = "🅴",
+    ["e"] = "🅴",
+    ["F"] = "🅵",
+    ["f"] = "🅵",
+    ["G"] = "🅶",
+    ["g"] = "🅶",
+    ["H"] = "🅷",
+    ["h"] = "🅷",
+    ["I"] = "🅸",
+    ["i"] = "🅸",
+    ["J"] = "🅹",
+    ["j"] = "🅹",
+    ["K"] = "🅺",
+    ["k"] = "🅺",
+    ["L"] = "🅻",
+    ["l"] = "🅻",
+    ["M"] = "🅼",
+    ["m"] = "🅼",
+    ["N"] = "🅽",
+    ["n"] = "🅽",
+    ["O"] = "🅾",
+    ["o"] = "🅾",
+    ["P"] = "🅿",
+    ["p"] = "🅿",
+    ["Q"] = "🆀",
+    ["q"] = "🆀",
+    ["R"] = "🆁",
+    ["r"] = "🆁",
+    ["S"] = "🆂",
+    ["s"] = "🆂",
+    ["T"] = "🆃",
+    ["t"] = "🆃",
+    ["U"] = "🆄",
+    ["u"] = "🆄",
+    ["V"] = "🆅",
+    ["v"] = "🆅",
+    ["W"] = "🆆",
+    ["w"] = "🆆",
+    ["X"] = "🆇",
+    ["x"] = "🆇",
+    ["Y"] = "🆈",
+    ["y"] = "🆈",
+    ["Z"] = "🆉",
+    ["z"] = "🆉",
+    ["0"] = "０",
+    ["1"] = "１",
+    ["2"] = "２",
+    ["3"] = "３",
+    ["4"] = "４",
+    ["5"] = "５",
+    ["6"] = "６",
+    ["7"] = "７",
+    ["8"] = "８",
+    ["9"] = "９",
+    [" "] = " "
+}
+
+local function filter(message)
+	local letters = _G.useAltLetters and altLetters or defaultLetters
+
+	for search, replacement in pairs(letters) do
+		message = message:gsub(search, replacement)
+	end
+	return message
+end
 
     local function filter(message)
         for search, replacement in pairs(letters) do
