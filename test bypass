@@ -273,19 +273,16 @@ local checkbox = script.Parent
 local tick = checkbox:WaitForChild("Tick")
 local checked = false
 
-local ChatEvent = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local chatService = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
 
 checkbox.MouseButton1Click:Connect(function()
 	checked = not checked
 	tick.TextTransparency = checked and 0 or 1
 
 	if checked then
-		task.spawn(function()
-			for i = 1, 25 do
-				ChatEvent:FireServer("Spam message #" .. i, "All")
-				task.wait(0.1) -- slight delay to prevent flooding
-			end
-		end)
+		for i = 1, 25 do
+			chatService:FireServer("Spam Message #" .. tostring(i), "All")
+		end
 	end
 end)
 ]]
