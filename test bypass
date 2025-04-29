@@ -2,19 +2,16 @@ local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 local Lighting = game:GetService("Lighting")
 
--- Create splash GUI
 local splashGui = Instance.new("ScreenGui")
 splashGui.IgnoreGuiInset = true
 splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
--- Optional: BlurEffect in Lighting
 local blur = Instance.new("BlurEffect")
 blur.Size = 24
 blur.Parent = Lighting
 
--- Custom blur image overlay
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
@@ -24,7 +21,6 @@ customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
 customOverlay.Parent = splashGui
 
--- Text label
 local splashText = Instance.new("TextLabel")
 splashText.Size = UDim2.new(1, 0, 1, 0)
 splashText.BackgroundTransparency = 1
@@ -36,7 +32,6 @@ splashText.TextTransparency = 1
 splashText.ZIndex = 2
 splashText.Parent = splashGui
 
--- Sound setup
 local splashSound = Instance.new("Sound")
 splashSound.SoundId = "rbxassetid://7481193560" -- Replace with your sound ID
 splashSound.Volume = 1
@@ -44,14 +39,12 @@ splashSound.Looped = false
 splashSound.Parent = splashGui
 splashSound:Play()
 
--- Fade in animation
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
-TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
+TweenService:Create(splashText, TweenInfo.new(2), {TextTransparency = 0}):Play()
 
 task.wait(3)
 
--- Fade out visuals and sound
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
@@ -61,13 +54,6 @@ task.wait(1.5)
 
 blur:Destroy()
 splashGui:Destroy()
-
-local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
-local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
-    Notification:Notify(
-       {Title = "By Father Rixhu, Insta ID ~ Pvtrixhu", Description = "Font Provided By Limo, youtube~ LuvLimo2"},
-       {OutlineColor = Color3.fromRGB(0, 0, 0), Time = 8, Type = "default"}
-    )
 
 local G2L = {}
 G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"));
