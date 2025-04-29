@@ -239,7 +239,15 @@ G2L["17"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
 G2L["17"]["TextTransparency"] = 1 -- Start hidden
 G2L["17"]["Font"] = Enum.Font.SourceSansBold
 G2L["17"]["TextScaled"] = true
-G2L["18"] = Instance.new("LocalScript", G2L["15"])
+G2L["18"] = Instance.new("local secondCheckbox = G2L["19"]
+local secondTick = secondCheckbox.Tick
+local secondToggled = false
+
+secondCheckbox.MouseButton1Click:Connect(function()
+    secondToggled = not secondToggled
+    secondTick.TextTransparency = secondToggled and 0 or 1
+end)
+", G2L["15"])
 G2L["19"] = Instance.new("TextButton", G2L["2"])
 G2L["19"]["Name"] = "SecondCheckbox"
 G2L["19"]["Size"] = UDim2.new(0, 20, 0, 20)
@@ -262,15 +270,7 @@ G2L["21"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
 G2L["21"]["TextTransparency"] = 1
 G2L["21"]["Font"] = Enum.Font.SourceSansBold
 G2L["21"]["TextScaled"] = true
-G2L["22"] = Instance.new("local checkbox = script.Parent
-local tick = checkbox:WaitForChild("Tick")
-local toggled = false
-
-checkbox.MouseButton1Click:Connect(function()
-    toggled = not toggled
-    tick.TextTransparency = toggled and 0 or 1
-end)
-", G2L["19"])
+G2L["22"] = Instance.new("LocaScript, G2L["19"])
 
 local function C_3()
     local script = G2L["3"]
