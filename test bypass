@@ -243,7 +243,7 @@ G2L["18"] = Instance.new("LocalScript", G2L["15"])
 G2L["19"] = Instance.new("TextButton", G2L["2"])
 G2L["19"]["Name"] = "SendSpamCheckbox"
 G2L["19"]["Size"] = UDim2.new(0, 20, 0, 20)
-G2L["19"]["Position"] = UDim2.new(1, -25, 1, -50) -- Positioned above the existing one
+G2L["19"]["Position"] = UDim2.new(1, -50, 1, -100)
 G2L["19"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
 G2L["19"]["BackgroundTransparency"] = 0.2
 G2L["19"]["Text"] = ""
@@ -259,15 +259,15 @@ G2L["21"] = Instance.new("TextLabel", G2L["19"])
 G2L["21"]["Name"] = "Tick"
 G2L["21"]["Size"] = UDim2.new(1, 0, 1, 0)
 G2L["21"]["BackgroundTransparency"] = 1
-G2L["21"]["Text"] = "🩸"
+G2L["21"]["Text"] = "✓" -- clearer than 🩸
 G2L["21"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
-G2L["21"]["TextTransparency"] = 1 -- Hidden initially
+G2L["21"]["TextTransparency"] = 1 -- Hidden by default
 G2L["21"]["Font"] = Enum.Font.SourceSansBold
 G2L["21"]["TextScaled"] = true
 
--- Add functionality via LocalScript
-local script1 = Instance.new("LocalScript", G2L["19"])
-script1.Source = [[
+-- Add LocalScript to make it work
+G2L["22"] = Instance.new("LocalScript", G2L["19"])
+G2L["22"].Source = [[
 local button = script.Parent
 local tick = button:WaitForChild("Tick")
 local checked = false
@@ -277,14 +277,20 @@ button.MouseButton1Click:Connect(function()
 	tick.TextTransparency = checked and 0 or 1
 
 	if checked then
-		for i = 1, 25 do
-			game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents")
-				:WaitForChild("SayMessageRequest"):FireServer("Message #" .. i, "All")
-			wait(0.1)
+		local chatEvent = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest")
+		if chatEvent then
+			for i = 1, 25 do
+				chatEvent:FireServer("Message #" .. i, "All")
+				wait(0.1)
+			end
+		else
+			warn("SayMessageRequest not found!")
 		end
 	end
 end)
 ]]
+
+G2L["21"].Parent = G2L["19"]
 
 local function C_3()
     local script = G2L["3"]
