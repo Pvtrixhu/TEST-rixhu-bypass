@@ -18,7 +18,7 @@ blur.Parent = Lighting
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://YOUR_IMAGE_ASSET_ID" -- 🔁 Replace with your image ID
+customOverlay.Image = "rbxassetid://103434281255283" -- 🔁 Replace with your image ID
 customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -31,14 +31,14 @@ splashText.BackgroundTransparency = 1
 splashText.TextScaled = true
 splashText.TextColor3 = Color3.fromRGB(255, 255, 255)
 splashText.Font = Enum.Font.Fantasy
-splashText.Text = "ＲＩＸＨＵ  ＬＯＡＤＩＮＧ．．．"
+splashText.Text = "ＲＩＸＨＵ"
 splashText.TextTransparency = 1
 splashText.ZIndex = 2
 splashText.Parent = splashGui
 
 -- Sound setup
 local splashSound = Instance.new("Sound")
-splashSound.SoundId = "rbxassetid://YOUR_SOUND_ASSET_ID" -- 🔁 Replace with your sound ID
+splashSound.SoundId = "rbxassetid://9072301639" -- 🔁 Replace with your sound ID
 splashSound.Volume = 1
 splashSound.Looped = false
 splashSound.Parent = splashGui
