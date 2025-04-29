@@ -14,6 +14,13 @@ local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = Lighting
 
+-- Create dark red-black overlay
+local colorOverlay = Instance.new("Frame")
+colorOverlay.Size = UDim2.new(1, 0, 1, 0)
+colorOverlay.BackgroundColor3 = Color3.fromRGB(80, 0, 0) -- dark red color
+colorOverlay.BackgroundTransparency = 1 -- start fully transparent
+colorOverlay.Parent = splashGui
+
 -- Text label setup
 local splashText = Instance.new("TextLabel")
 splashText.Size = UDim2.new(1, 0, 1, 0)
@@ -21,24 +28,30 @@ splashText.BackgroundTransparency = 1
 splashText.TextScaled = true
 splashText.TextColor3 = Color3.fromRGB(255, 255, 255)
 splashText.Font = Enum.Font.Fantasy
-splashText.Text = "ＲＩＸＨＵ"
+splashText.Text = "ＲＩＸＨＵ  ＬＯＡＤＩＮＧ．．．"
 splashText.TextTransparency = 1
 splashText.Parent = splashGui
 
--- Fade in blur and text
+-- Fade in blur, overlay, and text
 local blurIn = TweenService:Create(blur, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = 24})
+local overlayIn = TweenService:Create(colorOverlay, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.4})
 local textIn = TweenService:Create(splashText, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0})
+
 blurIn:Play()
+overlayIn:Play()
 textIn:Play()
 
 -- Wait before fading out
 textIn.Completed:Wait()
-task.wait(3)
+task.wait(1.5)
 
--- Fade out both text and blur
+-- Fade out blur, overlay, and text
 local blurOut = TweenService:Create(blur, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Size = 0})
+local overlayOut = TweenService:Create(colorOverlay, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {BackgroundTransparency = 1})
 local textOut = TweenService:Create(splashText, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {TextTransparency = 1})
+
 blurOut:Play()
+overlayOut:Play()
 textOut:Play()
 
 -- Cleanup
