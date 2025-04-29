@@ -9,7 +9,7 @@ splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
--- Optional: BlurEffect in Lighting (for soft background blur)
+-- Optional: BlurEffect in Lighting
 local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = Lighting
@@ -18,8 +18,8 @@ blur.Parent = Lighting
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://103434281255283" -- 🔁 Replace with your asset ID
-customOverlay.ImageTransparency = 1 -- start fully transparent
+customOverlay.Image = "rbxassetid://103434281255283" -- replace this
+customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
 customOverlay.Parent = splashGui
@@ -35,6 +35,15 @@ splashText.Text = "ＲＩＸＨＵ"
 splashText.TextTransparency = 1
 splashText.ZIndex = 2
 splashText.Parent = splashGui
+
+-- 🔊 Add sound
+local splashSound = Instance.new("Sound")
+splashSound.SoundId = "rbxassetid://9072301639" -- replace this
+splashSound.Volume = 1
+splashSound.Looped = false
+splashSound.PlayOnRemove = false
+splashSound.Parent = splashGui
+splashSound:Play()
 
 -- Fade in
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
