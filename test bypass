@@ -240,29 +240,77 @@ G2L["17"]["TextTransparency"] = 1 -- Start hidden
 G2L["17"]["Font"] = Enum.Font.SourceSansBold
 G2L["17"]["TextScaled"] = true
 G2L["18"] = Instance.new("localscript", G2L["15"])
-G2L["19"] = Instance.new("TextButton", G2L["2"])
-G2L["19"]["Name"] = "SecondCheckbox"
-G2L["19"]["Size"] = UDim2.new(0, 20, 0, 20)
-G2L["19"]["Position"] = UDim2.new(1, -50, 1, -25) -- offset to the left of the first
-G2L["19"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
-G2L["19"]["BackgroundTransparency"] = 0.2
-G2L["19"]["Text"] = ""
-G2L["19"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["19"]["TextSize"] = 14
-G2L["19"]["Font"] = Enum.Font.SourceSansBold
-G2L["20"] = Instance.new("UICorner", G2L["19"])
-G2L["20"]["CornerRadius"] = UDim.new(0, 3)
+G2L["19"] = Instance.new("TextButton");
+G2L["19"].Name = "SecondCheckbox";
+G2L["19"].Size = UDim2.new(0, 20, 0, 20);
+G2L["19"].BackgroundColor3 = Color3.fromRGB(50, 50, 50);
+G2L["19"].BorderSizePixel = 0;
+G2L["19"].Text = "";
+G2L["19"].AutoButtonColor = false;
 
-G2L["21"] = Instance.new("TextLabel", G2L["19"])
-G2L["21"]["Name"] = "Tick"
-G2L["21"]["Size"] = UDim2.new(1, 0, 1, 0)
-G2L["21"]["BackgroundTransparency"] = 1
-G2L["21"]["Text"] = "🩸"
-G2L["21"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
-G2L["21"]["TextTransparency"] = 1
-G2L["21"]["Font"] = Enum.Font.SourceSansBold
-G2L["21"]["TextScaled"] = true
-G2L["22"] = Instance.new("LocaScript", G2L["19"])
+-- Tick mark inside checkbox
+G2L["23"] = Instance.new("ImageLabel");
+G2L["23"].Name = "SecondTick";
+G2L["23"].Size = UDim2.new(1, 0, 1, 0);
+G2L["23"].BackgroundTransparency = 1;
+G2L["23"].Image = "rbxassetid://3926307971"; -- Optional tick icon
+G2L["23"].ImageRectOffset = Vector2.new(628, 420);
+G2L["23"].ImageRectSize = Vector2.new(48, 48);
+G2L["23"].Parent = G2L["19"];
+
+-- Cooldown overlay label
+G2L["CooldownLabel"] = Instance.new("TextLabel");
+G2L["CooldownLabel"].Size = UDim2.new(1, 0, 1, 0);
+G2L["CooldownLabel"].BackgroundTransparency = 1;
+G2L["CooldownLabel"].TextColor3 = Color3.new(1, 1, 1);
+G2L["CooldownLabel"].TextScaled = true;
+G2L["CooldownLabel"].Font = Enum.Font.SourceSansBold;
+G2L["CooldownLabel"].Visible = false;
+G2L["CooldownLabel"].ZIndex = 10;
+G2L["CooldownLabel"].Parent = G2L["19"];
+
+-- Scripted behavior
+local secondCheckbox = G2L["19"]
+local secondTick = G2L["23"]
+local cooldownText = G2L["CooldownLabel"]
+
+local secondToggled = true
+local cooldownTime = 3
+local canToggle = true
+
+secondTick.Visible = true
+
+secondCheckbox.MouseButton1Click:Connect(function()
+	if not canToggle then return end
+
+	secondToggled = not secondToggled
+	secondTick.Visible = secondToggled
+
+	if secondToggled then
+		-- Send "21" to chat
+		local player = game.Players.LocalPlayer
+		local msg = "21"
+		game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents")
+			:WaitForChild("SayMessageRequest"):FireServer(msg, "All")
+
+		-- Start cooldown
+		canToggle = false
+		cooldownText.Visible = true
+
+		for i = cooldownTime, 1, -1 do
+			cooldownText.Text = tostring(i)
+			task.wait(1)
+		end
+
+		-- Reset state
+		cooldownText.Visible = false
+		secondToggled = true
+		secondTick.Visible = true
+		canToggle = true
+	end
+end)
+
+return G2L;
 
 local function C_3()
     local script = G2L["3"]
