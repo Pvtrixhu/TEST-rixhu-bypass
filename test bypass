@@ -279,7 +279,13 @@ _G.useAltLetters = false
 
 checkbox.MouseButton1Click:Connect(function()
 	_G.useAltLetters = not _G.useAltLetters
-	tick.TextTransparency = _G.useAltLetters and 0 or 1
+	
+	if _G.useAltLetters then
+		tick.Visible = true
+		tick.TextTransparency = 0
+	else
+		tick.TextTransparency = 1
+	end
 end)
 ]]
 
