@@ -9,19 +9,22 @@ splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
--- Blur effect setup
+-- Optional: BlurEffect in Lighting (for soft background blur)
 local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = Lighting
 
--- Create dark red-black overlay
-local colorOverlay = Instance.new("Frame")
-colorOverlay.Size = UDim2.new(1, 0, 1, 0)
-colorOverlay.BackgroundColor3 = Color3.fromRGB(80, 0, 0) -- dark red color
-colorOverlay.BackgroundTransparency = 1 -- start fully transparent
-colorOverlay.Parent = splashGui
+-- Custom blur image overlay
+local customOverlay = Instance.new("ImageLabel")
+customOverlay.Size = UDim2.new(1, 0, 1, 0)
+customOverlay.BackgroundTransparency = 1
+customOverlay.Image = "rbxassetid://103434281255283" -- 🔁 Replace with your asset ID
+customOverlay.ImageTransparency = 1 -- start fully transparent
+customOverlay.ScaleType = Enum.ScaleType.Stretch
+customOverlay.ZIndex = 1
+customOverlay.Parent = splashGui
 
--- Text label setup
+-- Text label
 local splashText = Instance.new("TextLabel")
 splashText.Size = UDim2.new(1, 0, 1, 0)
 splashText.BackgroundTransparency = 1
@@ -30,32 +33,23 @@ splashText.TextColor3 = Color3.fromRGB(255, 255, 255)
 splashText.Font = Enum.Font.Fantasy
 splashText.Text = "ＲＩＸＨＵ  ＬＯＡＤＩＮＧ．．．"
 splashText.TextTransparency = 1
+splashText.ZIndex = 2
 splashText.Parent = splashGui
 
--- Fade in blur, overlay, and text
-local blurIn = TweenService:Create(blur, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = 24})
-local overlayIn = TweenService:Create(colorOverlay, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.4})
-local textIn = TweenService:Create(splashText, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 0})
+-- Fade in
+TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
+TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
+TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
-blurIn:Play()
-overlayIn:Play()
-textIn:Play()
+task.wait(3)
 
--- Wait before fading out
-textIn.Completed:Wait()
+-- Fade out
+TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
+TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
+TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
+
 task.wait(1.5)
 
--- Fade out blur, overlay, and text
-local blurOut = TweenService:Create(blur, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Size = 0})
-local overlayOut = TweenService:Create(colorOverlay, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {BackgroundTransparency = 1})
-local textOut = TweenService:Create(splashText, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {TextTransparency = 1})
-
-blurOut:Play()
-overlayOut:Play()
-textOut:Play()
-
--- Cleanup
-textOut.Completed:Wait()
 blur:Destroy()
 splashGui:Destroy()
 
