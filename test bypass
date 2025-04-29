@@ -38,7 +38,7 @@ splashText.Parent = splashGui
 
 -- Sound setup
 local splashSound = Instance.new("Sound")
-splashSound.SoundId = "rbxassetid://9072301639" -- Replace with your sound ID
+splashSound.SoundId = "rbxassetid://7481193560" -- Replace with your sound ID
 splashSound.Volume = 1
 splashSound.Looped = false
 splashSound.Parent = splashGui
