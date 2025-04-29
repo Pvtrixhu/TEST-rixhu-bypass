@@ -9,16 +9,16 @@ splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
--- Blur effect
+-- Optional: BlurEffect in Lighting
 local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = Lighting
 
--- Custom blur overlay
+-- Custom blur image overlay
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://103434281255283" -- 🔁 Replace with your image ID
+customOverlay.Image = "rbxassetid://103434281255283" -- Replace with your image ID
 customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -38,23 +38,24 @@ splashText.Parent = splashGui
 
 -- Sound setup
 local splashSound = Instance.new("Sound")
-splashSound.SoundId = "rbxassetid://9072301639" -- 🔁 Replace with your sound ID
+splashSound.SoundId = "rbxassetid://9072301639" -- Replace with your sound ID
 splashSound.Volume = 1
 splashSound.Looped = false
 splashSound.Parent = splashGui
 splashSound:Play()
 
--- Fade in visuals
+-- Fade in animation
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
--- Wait fixed time, then fade out visuals only
-task.wait(3.5)
+task.wait(3)
 
+-- Fade out visuals and sound
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
+TweenService:Create(splashSound, TweenInfo.new(1.5), {Volume = 0}):Play()
 
 task.wait(1.5)
 
