@@ -41,7 +41,7 @@ splashSound:Play()
 
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
-TweenService:Create(splashText, TweenInfo.new(2), {TextTransparency = 0}):Play()
+TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
 task.wait(3)
 
