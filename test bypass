@@ -9,16 +9,16 @@ splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
--- Optional: BlurEffect in Lighting
+-- Blur effect
 local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = Lighting
 
--- Custom blur image overlay
+-- Custom blur overlay
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://103434281255283" -- Replace with your image ID
+customOverlay.Image = "rbxassetid://YOUR_IMAGE_ASSET_ID" -- 🔁 Replace with your image ID
 customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -31,33 +31,37 @@ splashText.BackgroundTransparency = 1
 splashText.TextScaled = true
 splashText.TextColor3 = Color3.fromRGB(255, 255, 255)
 splashText.Font = Enum.Font.Fantasy
-splashText.Text = "ＲＩＸＨＵ"
+splashText.Text = "ＲＩＸＨＵ  ＬＯＡＤＩＮＧ．．．"
 splashText.TextTransparency = 1
 splashText.ZIndex = 2
 splashText.Parent = splashGui
 
 -- Sound setup
 local splashSound = Instance.new("Sound")
-splashSound.SoundId = "rbxassetid://9072301639" -- Replace with your sound ID
+splashSound.SoundId = "rbxassetid://YOUR_SOUND_ASSET_ID" -- 🔁 Replace with your sound ID
 splashSound.Volume = 1
 splashSound.Looped = false
 splashSound.Parent = splashGui
 splashSound:Play()
 
--- Fade in animation
+-- Fade in effects
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
-task.wait(3)
+-- Wait for most of the sound to finish
+splashSound.Loaded:Wait()
+local soundLength = splashSound.TimeLength
+local fadeOutDuration = 1.5
+task.wait(math.max(0, soundLength - fadeOutDuration))
 
 -- Fade out visuals and sound
-TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
-TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
-TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
-TweenService:Create(splashSound, TweenInfo.new(1.5), {Volume = 0}):Play()
+TweenService:Create(blur, TweenInfo.new(fadeOutDuration), {Size = 0}):Play()
+TweenService:Create(customOverlay, TweenInfo.new(fadeOutDuration), {ImageTransparency = 1}):Play()
+TweenService:Create(splashText, TweenInfo.new(fadeOutDuration), {TextTransparency = 1}):Play()
+TweenService:Create(splashSound, TweenInfo.new(fadeOutDuration), {Volume = 0}):Play()
 
-task.wait(1.5)
+task.wait(fadeOutDuration)
 
 blur:Destroy()
 splashGui:Destroy()
