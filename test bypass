@@ -9,7 +9,7 @@ splashGui.Name = "SplashGui"
 splashGui.Parent = CoreGui
 
 local blur = Instance.new("BlurEffect")
-blur.Size = 24
+blur.Size = 25
 blur.Parent = Lighting
 
 local customOverlay = Instance.new("ImageLabel")
