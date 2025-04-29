@@ -18,7 +18,7 @@ blur.Parent = Lighting
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://103434281255283" -- Replace with your image ID
+customOverlay.Image = "rbxassetid://99245105579918" -- Replace with your image ID
 customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -62,37 +62,6 @@ task.wait(1.5)
 blur:Destroy()
 splashGui:Destroy()
 
-local SoundService = game:GetService("SoundService")
-local RunService = game:GetService("RunService")
-
-local StartupSound = Instance.new("Sound")
-StartupSound.SoundId = "rbxassetid://506001681"
-StartupSound.Volume = 1
-StartupSound.Parent = SoundService
-
-StartupSound:Play()
-
-local function fadeOutSound(sound, fadeTime)
-    local startTime = tick()
-    local startVolume = sound.Volume
-
-    local connection
-    connection = RunService.Heartbeat:Connect(function()
-        local elapsed = tick() - startTime
-        local alpha = math.clamp(elapsed / fadeTime, 0, 1)
-        sound.Volume = startVolume * (1 - alpha)
-
-        if alpha >= 1 then
-            connection:Disconnect()
-            sound:Stop()
-            sound:Destroy()
-        end
-    end)
-end
-
-StartupSound.Ended:Connect(function()
-    fadeOutSound(StartupSound, 2) -- 2 seconds fade out
-end)
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
