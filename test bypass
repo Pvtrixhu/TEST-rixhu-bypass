@@ -18,7 +18,7 @@ blur.Parent = Lighting
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://103434281255283" -- replace this
+customOverlay.Image = "rbxassetid://YOUR_IMAGE_ASSET_ID" -- Replace with your image ID
 customOverlay.ImageTransparency = 1
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -31,31 +31,31 @@ splashText.BackgroundTransparency = 1
 splashText.TextScaled = true
 splashText.TextColor3 = Color3.fromRGB(255, 255, 255)
 splashText.Font = Enum.Font.Fantasy
-splashText.Text = "ＲＩＸＨＵ"
+splashText.Text = "ＲＩＸＨＵ  ＬＯＡＤＩＮＧ．．．"
 splashText.TextTransparency = 1
 splashText.ZIndex = 2
 splashText.Parent = splashGui
 
--- 🔊 Add sound
+-- Sound setup
 local splashSound = Instance.new("Sound")
-splashSound.SoundId = "rbxassetid://9072301639" -- replace this
+splashSound.SoundId = "rbxassetid://YOUR_SOUND_ASSET_ID" -- Replace with your sound ID
 splashSound.Volume = 1
 splashSound.Looped = false
-splashSound.PlayOnRemove = false
 splashSound.Parent = splashGui
 splashSound:Play()
 
--- Fade in
+-- Fade in animation
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 24}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 0.3}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
 
 task.wait(3)
 
--- Fade out
+-- Fade out visuals and sound
 TweenService:Create(blur, TweenInfo.new(1.5), {Size = 0}):Play()
 TweenService:Create(customOverlay, TweenInfo.new(1.5), {ImageTransparency = 1}):Play()
 TweenService:Create(splashText, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
+TweenService:Create(splashSound, TweenInfo.new(1.5), {Volume = 0}):Play()
 
 task.wait(1.5)
 
