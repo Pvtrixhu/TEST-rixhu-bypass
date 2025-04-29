@@ -262,15 +262,15 @@ G2L["21"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
 G2L["21"]["TextTransparency"] = 1
 G2L["21"]["Font"] = Enum.Font.SourceSansBold
 G2L["21"]["TextScaled"] = true
-G2L["22"] = Instance.new("LocalScript", G2L["19"])
-G2L["22"][local checkbox = script.Parent
+G2L["22"] = Instance.new("local checkbox = script.Parent
 local tick = checkbox:WaitForChild("Tick")
 local toggled = false
 
 checkbox.MouseButton1Click:Connect(function()
     toggled = not toggled
     tick.TextTransparency = toggled and 0 or 1
-end)]
+end)
+", G2L["19"])
 
 local function C_3()
     local script = G2L["3"]
