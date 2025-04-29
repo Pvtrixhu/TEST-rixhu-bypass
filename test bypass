@@ -240,35 +240,6 @@ G2L["17"]["TextTransparency"] = 1 -- Start hidden
 G2L["17"]["Font"] = Enum.Font.SourceSansBold
 G2L["17"]["TextScaled"] = true
 G2L["18"] = Instance.new("LocalScript", G2L["15"])
-G2L["19"] = Instance.new("TextButton", G2L["2"])
-G2L["19"]["Name"] = "SendSpamCheckbox"
-G2L["19"]["Size"] = UDim2.new(0, 20, 0, 20)
-G2L["19"]["Position"] = UDim2.new(1, -50, 1, -100)
-G2L["19"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
-G2L["19"]["BackgroundTransparency"] = 0.2
-G2L["19"]["Text"] = ""
-G2L["19"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["19"]["TextSize"] = 14
-G2L["19"]["Font"] = Enum.Font.SourceSansBold
-G2L["19"]["Visible"] = true
-
-G2L["20"] = Instance.new("UICorner", G2L["19"])
-G2L["20"]["CornerRadius"] = UDim.new(0, 3)
-
-G2L["21"] = Instance.new("TextLabel", G2L["19"])
-G2L["21"]["Name"] = "Tick"
-G2L["21"]["Size"] = UDim2.new(1, 0, 1, 0)
-G2L["21"]["BackgroundTransparency"] = 1
-G2L["21"]["Text"] = "✓" -- clearer than 🩸
-G2L["21"]["TextColor3"] = Color3.fromRGB(0, 255, 0)
-G2L["21"]["TextTransparency"] = 1 -- Hidden by default
-G2L["21"]["Font"] = Enum.Font.SourceSansBold
-G2L["21"]["TextScaled"] = true
-
--- Add LocalScript to make it work
-G2L["22"] = Instance.new("LocalScript", G2L["19"])
-
-G2L["21"].Parent = G2L["19"]
 
 local function C_3()
     local script = G2L["3"]
@@ -398,46 +369,19 @@ local letters = {
     [" "] = " "
 }
 
-    local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Chat = game:GetService("Chat")
-local TextChatService = game:GetService("TextChatService")
-
-local LocalPlayer = Players.LocalPlayer
-local textBox = script.Parent:WaitForChild("TextBox") -- Adjust path as needed
-
--- Filtering helpers
-local letters = {
-    ["a"] = "@",
-    ["e"] = "3",
-    -- Add more if needed
-}
-
-local function replace(str, pattern, replacement)
-    return str:gsub(pattern, replacement)
-end
-
-local function filter(message)
-    for search, replacement in pairs(letters) do
-        message = replace(message, search, replacement)
+    local function filter(message)
+        for search, replacement in pairs(letters) do
+            message = replace(message, search, replacement)
+        end
+        return message
     end
-    return message
-end
-
-local function showNotification(title, text)
-    StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = 5
-    })
-end
-
-local function sendChat(msg)
-    local filteredMessage = Chat:FilterStringForBroadcast(msg, LocalPlayer)
+    local function showNotification(title, text)
+        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
+    end
+    local function sendChat(msg)
+    local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
     local tagged = filteredMessage ~= msg
-
-    local keepTextCheckbox = script.Parent:FindFirstChild("KeepTextCheckbox")
+    local keepTextCheckbox = script.Parent.Parent.Parent:FindFirstChild("KeepTextCheckbox")
     local keepTextTick = keepTextCheckbox and keepTextCheckbox:FindFirstChild("Tick")
 
     if tagged then
@@ -445,37 +389,16 @@ local function sendChat(msg)
         textBox.Text = ""
     else
         if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
-            local chatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
-            if chatEvents and chatEvents:FindFirstChild("SayMessageRequest") then
-                chatEvents.SayMessageRequest:FireServer(msg, "All")
-            end
+            ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
         else
-            warn("TextChatService not supported by this script.")
+            chat:SendAsync(msg)
         end
-
+        
+        -- ONLY clear if checkbox is NOT checked
         if keepTextTick and keepTextTick.TextTransparency == 1 then
             textBox.Text = ""
         end
     end
-end
-
--- === ✅ SendSpamCheckbox Setup ===
-local spamCheckbox = script.Parent:FindFirstChild("SendSpamCheckbox")
-local tick = spamCheckbox and spamCheckbox:FindFirstChild("Tick")
-local isChecked = false
-
-if spamCheckbox and tick then
-    spamCheckbox.MouseButton1Click:Connect(function()
-        isChecked = not isChecked
-        tick.TextTransparency = isChecked and 0 or 1
-
-        if isChecked then
-            for i = 1, 25 do
-                sendChat("Auto message #" .. i)
-                wait(0.1)
-            end
-        end
-    end)
 end
 
     local function processText()
