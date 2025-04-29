@@ -267,28 +267,6 @@ G2L["21"]["TextScaled"] = true
 
 -- Add LocalScript to make it work
 G2L["22"] = Instance.new("LocalScript", G2L["19"])
-G2L["22"].Source = [[
-local button = script.Parent
-local tick = button:WaitForChild("Tick")
-local checked = false
-
-button.MouseButton1Click:Connect(function()
-	checked = not checked
-	tick.TextTransparency = checked and 0 or 1
-
-	if checked then
-		local chatEvent = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest")
-		if chatEvent then
-			for i = 1, 25 do
-				chatEvent:FireServer("Message #" .. i, "All")
-				wait(0.1)
-			end
-		else
-			warn("SayMessageRequest not found!")
-		end
-	end
-end)
-]]
 
 G2L["21"].Parent = G2L["19"]
 
@@ -420,19 +398,46 @@ local letters = {
     [" "] = " "
 }
 
-    local function filter(message)
-        for search, replacement in pairs(letters) do
-            message = replace(message, search, replacement)
-        end
-        return message
+    local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Chat = game:GetService("Chat")
+local TextChatService = game:GetService("TextChatService")
+
+local LocalPlayer = Players.LocalPlayer
+local textBox = script.Parent:WaitForChild("TextBox") -- Adjust path as needed
+
+-- Filtering helpers
+local letters = {
+    ["a"] = "@",
+    ["e"] = "3",
+    -- Add more if needed
+}
+
+local function replace(str, pattern, replacement)
+    return str:gsub(pattern, replacement)
+end
+
+local function filter(message)
+    for search, replacement in pairs(letters) do
+        message = replace(message, search, replacement)
     end
-    local function showNotification(title, text)
-        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
-    end
-    local function sendChat(msg)
-    local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+    return message
+end
+
+local function showNotification(title, text)
+    StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 5
+    })
+end
+
+local function sendChat(msg)
+    local filteredMessage = Chat:FilterStringForBroadcast(msg, LocalPlayer)
     local tagged = filteredMessage ~= msg
-    local keepTextCheckbox = script.Parent.Parent.Parent:FindFirstChild("KeepTextCheckbox")
+
+    local keepTextCheckbox = script.Parent:FindFirstChild("KeepTextCheckbox")
     local keepTextTick = keepTextCheckbox and keepTextCheckbox:FindFirstChild("Tick")
 
     if tagged then
@@ -440,16 +445,37 @@ local letters = {
         textBox.Text = ""
     else
         if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
-            ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
+            local chatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+            if chatEvents and chatEvents:FindFirstChild("SayMessageRequest") then
+                chatEvents.SayMessageRequest:FireServer(msg, "All")
+            end
         else
-            chat:SendAsync(msg)
+            warn("TextChatService not supported by this script.")
         end
-        
-        -- ONLY clear if checkbox is NOT checked
+
         if keepTextTick and keepTextTick.TextTransparency == 1 then
             textBox.Text = ""
         end
     end
+end
+
+-- === ✅ SendSpamCheckbox Setup ===
+local spamCheckbox = script.Parent:FindFirstChild("SendSpamCheckbox")
+local tick = spamCheckbox and spamCheckbox:FindFirstChild("Tick")
+local isChecked = false
+
+if spamCheckbox and tick then
+    spamCheckbox.MouseButton1Click:Connect(function()
+        isChecked = not isChecked
+        tick.TextTransparency = isChecked and 0 or 1
+
+        if isChecked then
+            for i = 1, 25 do
+                sendChat("Auto message #" .. i)
+                wait(0.1)
+            end
+        end
+    end)
 end
 
     local function processText()
