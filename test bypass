@@ -272,9 +272,10 @@ G2L["23"]tick.TextTransparency = 1 -- initially hidden
 G2L["23"]tick.Font = Enum.Font.SourceSansBold
 G2L["23"]tick.TextScaled = true
 G2L["23"]tick.Parent = checkbox
-
-local checkbox = script.Parent
-local tick = checkbox:WaitForChild("Tick")
+G2L["24"] = Instance.new("LocalScript", G2L["21"])
+G2L["24"].Source = [[
+G2L["25"]local checkbox = script.Parent
+G2L["25"]local tick = checkbox:WaitForChild("Tick")
 
 local checked = false
 
@@ -290,6 +291,7 @@ checkbox.MouseButton1Click:Connect(function()
 		end
 	end
 end)
+]]
 
 local function C_3()
     local script = G2L["3"]
