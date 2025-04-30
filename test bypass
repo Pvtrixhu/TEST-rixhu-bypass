@@ -82,7 +82,7 @@ local asset2 = "rbxassetid://89276783716500" -- Replace with actual asset ID
 
 local function createAssetButton(imageId)
 	local btn = Instance.new("ImageButton")
-	btn.Size = UDim2.new(0, 150, 0, 150)
+	btn.Size = UDim2.new(0, 250, 0, 250) -- Increased size
 	btn.Position = UDim2.new(0.5, 0, 0.5, 0)
 	btn.AnchorPoint = Vector2.new(0.5, 0.5)
 	btn.BackgroundTransparency = 1
@@ -112,10 +112,10 @@ TweenService:Create(button2, fadeIn, {
 	Position = UDim2.new(0.65, 0, 0.5, 0)
 }):Play()
 
--- Pop animation
+-- Pop animation (scaled for bigger size)
 local function popEffect(btn)
-	local grow = TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(0, 165, 0, 165)})
-	local shrink = TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(0, 150, 0, 150)})
+	local grow = TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(0, 270, 0, 270)})
+	local shrink = TweenService:Create(btn, TweenInfo.new(0.1), {Size = UDim2.new(0, 250, 0, 250)})
 	grow:Play()
 	grow.Completed:Connect(function()
 		shrink:Play()
