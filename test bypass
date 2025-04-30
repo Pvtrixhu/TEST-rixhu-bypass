@@ -222,7 +222,7 @@ G2L["7"]["BorderSizePixel"] = 0
 G2L["7"]["TextWrapped"] = true
 G2L["7"]["TextTransparency"] = 0.50
 G2L["7"]["TextScaled"] = true
-G2L["7"]["BackgroundColor3"] = Color3.fromRGB(255, 0, 0)
+G2L["7"]["BackgroundColor3"] = Color3.fromRGB(45, 132, 175)
 G2L["7"]["FontFace"] = Font.new([[rbxasset://fonts/families/DenkOne.json]])
 G2L["7"]["PlaceholderText"] = [[W R I T E  H E R E]]
 G2L["7"]["Size"] = UDim2.new(0.84333, -20, 0.33938, -10)
@@ -520,7 +520,7 @@ local function C_14()
     -- Find the special ImageLabel
     local specialImage
     for _, child in ipairs(main:GetDescendants()) do
-        if child:IsA("ImageLabel") and child.Image == "rbxassetid://103434281255283" then
+        if child:IsA("ImageLabel") and child.Image == "rbxassetid://81035835966463" then
             specialImage = child
             break
         end
