@@ -104,12 +104,12 @@ local fadeIn = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Ou
 
 TweenService:Create(button1, fadeIn, {
 	ImageTransparency = 0,
-	Position = UDim2.new(0.3, 0, 0.5, 0)
+	Position = UDim2.new(0.1, 0, 0.5, 0)
 }):Play()
 
 TweenService:Create(button2, fadeIn, {
 	ImageTransparency = 0,
-	Position = UDim2.new(0.7, 0, 0.5, 0)
+	Position = UDim2.new(0.9, 0, 0.5, 0)
 }):Play()
 
 -- Pop animation (scaled for bigger size)
