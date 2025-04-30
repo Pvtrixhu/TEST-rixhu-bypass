@@ -55,6 +55,7 @@ task.wait(1.5)
 blur:Destroy()
 splashGui:Destroy()
 
+local SoundService = game:GetService("SoundService")
 local introSound = Instance.new("Sound")
 introSound.SoundId = "rbxassetid://5797595098"  -- 🔊 Replace with your actual sound asset ID
 introSound.Volume = 1
