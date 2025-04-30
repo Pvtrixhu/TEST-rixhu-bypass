@@ -423,8 +423,8 @@ local function C_a()
         return str:gsub(escaped_find_str, replace_str)
     end
 local letters = {
-    ["A"] = "α",
-    ["a"] = "α",
+    ["A"] = "Λ",
+    ["a"] = "Λ",
     ["B"] = "ҍ",
     ["b"] = "ҍ",
     ["C"] = "ꞓ",
@@ -459,8 +459,8 @@ local letters = {
     ["q"] = "Ҩ",
     ["R"] = "ɾ",
     ["r"] = "ɾ",
-    ["S"] = "ś",
-    ["s"] = "ś",
+    ["S"] = "ʂ",
+    ["s"] = "ʂ",
     ["T"] = "ƚ",
     ["t"] = "ƚ",
     ["U"] = "ȗ",
