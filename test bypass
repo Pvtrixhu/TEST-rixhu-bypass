@@ -269,8 +269,7 @@ G2L["21"]["Font"] = Enum.Font.SourceSansBold
 G2L["21"]["TextScaled"] = true
 
 -- G2L["22"] - LocalScript to toggle styles
-G2L["22"] = Instance.new("LocalScript", G2L["19"])
-G2L["22"].Source = [[
+G2L["22"] = Instance.new("LocalScript", G2L["21"])
 local checkbox = script.Parent
 local tick = checkbox:WaitForChild("Tick")
 
@@ -287,7 +286,6 @@ checkbox.MouseButton1Click:Connect(function()
 		tick.TextTransparency = 1
 	end
 end)
-]]
 
 local function C_3()
     local script = G2L["3"]
