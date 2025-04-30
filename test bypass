@@ -55,6 +55,13 @@ task.wait(1.5)
 blur:Destroy()
 splashGui:Destroy()
 
+local introSound = Instance.new("Sound")
+introSound.SoundId = "rbxassetid://5797595098"  -- 🔊 Replace with your actual sound asset ID
+introSound.Volume = 1
+introSound.PlayOnRemove = false
+introSound.Parent = SoundService
+introSound:Play()
+
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
@@ -77,8 +84,8 @@ container.BackgroundTransparency = 1
 container.Size = UDim2.new(1, 0, 1, 0)
 
 -- Script asset IDs
-local asset1 = "rbxassetid://113086737570912" -- Replace with actual asset ID
-local asset2 = "rbxassetid://89276783716500" -- Replace with actual asset ID
+local asset1 = "rbxassetid://128065570168183" -- Replace with actual asset ID
+local asset2 = "rbxassetid://116841022210481" -- Replace with actual asset ID
 
 local function createAssetButton(imageId)
 	local btn = Instance.new("ImageButton")
@@ -104,12 +111,12 @@ local fadeIn = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Ou
 
 TweenService:Create(button1, fadeIn, {
 	ImageTransparency = 0,
-	Position = UDim2.new(0.2, 0, 0.5, 0)
+	Position = UDim2.new(0.25, 0, 0.5, 0)
 }):Play()
 
 TweenService:Create(button2, fadeIn, {
 	ImageTransparency = 0,
-	Position = UDim2.new(0.8, 0, 0.5, 0)
+	Position = UDim2.new(0.75, 0, 0.5, 0)
 }):Play()
 
 -- Pop animation (scaled for bigger size)
@@ -135,6 +142,37 @@ end
 -- Define the two scripts
 local function runScript1()
 	print("Running Script 1...")
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
+
+local StartupSound = Instance.new("Sound")
+StartupSound.SoundId = "rbxassetid://7481193560"
+StartupSound.Volume = 1
+StartupSound.Parent = SoundService
+
+StartupSound:Play()
+
+local function fadeOutSound(sound, fadeTime)
+    local startTime = tick()
+    local startVolume = sound.Volume
+
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        local elapsed = tick() - startTime
+        local alpha = math.clamp(elapsed / fadeTime, 0, 1)
+        sound.Volume = startVolume * (1 - alpha)
+
+        if alpha >= 1 then
+            connection:Disconnect()
+            sound:Stop()
+            sound:Destroy()
+        end
+    end)
+end
+
+StartupSound.Ended:Connect(function()
+    fadeOutSound(StartupSound, 2) -- 2 seconds fade out
+end)
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
@@ -621,6 +659,37 @@ end
 
 local function runScript2()
 	print("Running Script 2...")
+local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
+
+local StartupSound = Instance.new("Sound")
+StartupSound.SoundId = "rbxassetid://506001681"
+StartupSound.Volume = 1
+StartupSound.Parent = SoundService
+
+StartupSound:Play()
+
+local function fadeOutSound(sound, fadeTime)
+    local startTime = tick()
+    local startVolume = sound.Volume
+
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        local elapsed = tick() - startTime
+        local alpha = math.clamp(elapsed / fadeTime, 0, 1)
+        sound.Volume = startVolume * (1 - alpha)
+
+        if alpha >= 1 then
+            connection:Disconnect()
+            sound:Stop()
+            sound:Destroy()
+        end
+    end)
+end
+
+StartupSound.Ended:Connect(function()
+    fadeOutSound(StartupSound, 2) -- 2 seconds fade out
+end)
 local NotificationHolder = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Module.Lua"))()
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/BocusLuke/UI/main/STX/Client.Lua"))()
     Notification:Notify(
