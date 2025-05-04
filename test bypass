@@ -74,7 +74,7 @@ minBtn.Font = Enum.Font.GothamBold
 minBtn.TextSize = 18
 minBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 minBtn.TextColor3 = Color3.new(1, 1, 1)
-minBtn.Parent = screenGui
+minBtn.Parent = mainFrame -- moved from screenGui to mainFrame
 makeRound(minBtn)
 
 -- Title
@@ -262,15 +262,26 @@ end)
 
 refreshList("")
 
--- Minimize Logic
+-- Animated Minimize Logic
 local minimized = false
+local originalSize = mainFrame.Size
+local minimizedSize = UDim2.new(0, 225, 0, 35)
+
 minBtn.MouseButton1Click:Connect(function()
 	minimized = not minimized
-	if minimized then
-		TweenService:Create(mainFrame, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
-		mainFrame.Visible = false
-	else
-		mainFrame.Visible = true
-		TweenService:Create(mainFrame, TweenInfo.new(0.3), {ImageTransparency = 0}):Play()
+	local targetSize = minimized and minimizedSize or originalSize
+
+	-- Tween the size of the frame
+	TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = targetSize
+	}):Play()
+
+	-- Fade/Hide contents except title + buttons
+	for _, child in ipairs(mainFrame:GetChildren()) do
+		if child:IsA("Frame") or child:IsA("TextLabel") then
+			if child.Name ~= "title" then
+				child.Visible = not minimized
+			end
+		end
 	end
 end)
