@@ -141,6 +141,15 @@ end
 
 playButton.MouseButton1Click:Connect(function()
 	local id = musicBox.Text
+	if id == "" then
+		if currentSound then
+			currentSound:Stop()
+			currentSound:Destroy()
+			currentSound = nil
+		end
+		return -- Do not play anything
+	end
+
 	if tonumber(id) then
 		playMusic(id)
 	end
