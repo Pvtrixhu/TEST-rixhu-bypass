@@ -121,22 +121,33 @@ playButton.BackgroundColor3 = Color3.new(0, 0, 0)
 playButton.Parent = container
 makeRound(playButton)
 
--- Fade-Out & Play Music
+-- ID of the Brookhaven music pass (update this if needed)
+local MUSIC_PASS_ID = 9066988 -- Example ID, replace with correct one
+local MarketplaceService = game:GetService("MarketplaceService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Try to find the RemoteEvent Brookhaven uses for music playback
+local musicRemote = ReplicatedStorage:FindFirstChild("PlayMusic") or ReplicatedStorage:FindFirstChild("RemoteEventNameHere")
+
+-- Utility: Check if player owns the music pass
+local function hasMusicPass()
+	local success, result = pcall(function()
+		return MarketplaceService:UserOwnsGamePassAsync(player.UserId, MUSIC_PASS_ID)
+	end)
+	return success and result
+end
+
+-- Replace this with actual RemoteEvent firing logic
 local function playMusic(id)
-	if currentSound then
-		local fade = TweenService:Create(currentSound, TweenInfo.new(0.5), {Volume = 0})
-		fade:Play()
-		fade.Completed:Wait()
-		currentSound:Stop()
-		currentSound:Destroy()
+	if hasMusicPass() then
+		if musicRemote then
+			musicRemote:FireServer(tonumber(id))
+		else
+			warn("Music RemoteEvent not found. Cannot play music.")
+		end
+	else
+		warn("Player does not own the Brookhaven Music Pass.")
 	end
-	local sound = Instance.new("Sound")
-	sound.SoundId = "rbxassetid://" .. id
-	sound.Volume = 1
-	sound.Looped = true
-	sound.Parent = workspace
-	sound:Play()
-	currentSound = sound
 end
 
 playButton.MouseButton1Click:Connect(function()
