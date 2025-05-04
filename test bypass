@@ -137,33 +137,50 @@ local function hasMusicPass()
 	return success and result
 end
 
--- Replace this with actual RemoteEvent firing logic
+-- New playMusic Function for Brookhaven Music Pass
 local function playMusic(id)
-	if hasMusicPass() then
-		if musicRemote then
-			musicRemote:FireServer(tonumber(id))
-		else
-			warn("Music RemoteEvent not found. Cannot play music.")
-		end
-	else
-		warn("Player does not own the Brookhaven Music Pass.")
-	end
+    -- Check if the player has the Music Pass
+    local musicPass = player:FindFirstChild("MusicPass") -- Check for MusicPass property
+    if not musicPass or not musicPass.Value then
+        warn("Player does not have the Music Pass.")
+        return
+    end
+
+    -- Stop any current music
+    if currentSound then
+        local fade = TweenService:Create(currentSound, TweenInfo.new(0.5), {Volume = 0})
+        fade:Play()
+        fade.Completed:Wait()
+        currentSound:Stop()
+        currentSound:Destroy()
+    end
+
+    -- Start playing music with Music Pass (Using MusicPlayer API)
+    local musicPlayer = game:GetService("SoundService"):FindFirstChild("BrookhavenMusicPlayer")
+    if musicPlayer then
+        -- Set the music ID and play it via the MusicPlayer API
+        musicPlayer:PlayMusic(id)  -- This function would interact with the Brookhaven system to play the track
+        currentSound = musicPlayer
+    else
+        warn("BrookhavenMusicPlayer not found.")
+    end
 end
 
-playButton.MouseButton1Click:Connect(function()
-	local id = musicBox.Text
-	if id == "" then
-		if currentSound then
-			currentSound:Stop()
-			currentSound:Destroy()
-			currentSound = nil
-		end
-		return -- Do not play anything
-	end
+pplayButton.MouseButton1Click:Connect(function()
+    local id = musicBox.Text
+    if id == "" then
+        if currentSound then
+            currentSound:Stop()
+            currentSound:Destroy()
+            currentSound = nil
+        end
+        return -- Do not play anything
+    end
 
-	if tonumber(id) then
-		playMusic(id)
-	end
+    -- Check if it's a valid Music ID
+    if tonumber(id) then
+        playMusic(id)  -- Use the new playMusic function
+    end
 end)
 
 -- Checkboxes Logic
