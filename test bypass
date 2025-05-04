@@ -5,6 +5,15 @@ local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
+-- Music Database Example (for filtering)
+local musicDatabase = {
+    {id = "1843529635", title = "Jo Tum Mere Ho"},
+    {id = "8768761886128", title = "Cool Vibes"},
+    {id = "638678263", title = "Epic Soundtrack"},
+    {id = "9045673871", title = "Night Drive"},
+    {id = "7238962742", title = "Lo-Fi Chill"}
+}
+
 -- Main GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "RIXHUMusicUI"
@@ -160,6 +169,89 @@ for i = 1, 3 do
 
 	checkboxes[labels[i]] = false
 end
+
+-- MUSIC IDs Section
+local musicTitle = Instance.new("TextLabel")
+musicTitle.Text = "MUSIC ID's"
+musicTitle.Size = UDim2.new(1, 0, 0, 25)
+musicTitle.Position = UDim2.new(0, 0, 0, 75)
+musicTitle.BackgroundTransparency = 1
+musicTitle.Font = Enum.Font.GothamBold
+musicTitle.TextColor3 = Color3.fromRGB(255,255,255)
+musicTitle.TextSize = 14
+musicTitle.Parent = container
+
+-- Search Bar
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(0.7, 0, 0, 25)
+searchBox.Position = UDim2.new(0, 0, 0, 100)
+searchBox.PlaceholderText = "Search by name or ID..."
+searchBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+searchBox.TextColor3 = Color3.new(1,1,1)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 12
+searchBox.BorderSizePixel = 0
+searchBox.Parent = container
+makeRound(searchBox)
+
+local searchBtn = Instance.new("TextButton")
+searchBtn.Size = UDim2.new(0.25, 0, 0, 25)
+searchBtn.Position = UDim2.new(0.75, 0, 0, 100)
+searchBtn.Text = "Search"
+searchBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
+searchBtn.TextColor3 = Color3.new(1,1,1)
+searchBtn.Font = Enum.Font.Gotham
+searchBtn.TextSize = 12
+searchBtn.BorderSizePixel = 0
+searchBtn.Parent = container
+makeRound(searchBtn)
+
+-- Scrollable List
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, 0, 0, 100)
+scrollFrame.Position = UDim2.new(0, 0, 0, 130)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollFrame.ScrollBarThickness = 4
+scrollFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+scrollFrame.BorderSizePixel = 0
+scrollFrame.Parent = container
+makeRound(scrollFrame)
+
+local function refreshList(filter)
+	scrollFrame:ClearAllChildren()
+	local y = 0
+	for _, data in ipairs(musicDatabase) do
+		if filter == "" or string.find(string.lower(data.title), string.lower(filter)) or string.find(data.id, filter) then
+			local item = Instance.new("TextButton")
+			item.Size = UDim2.new(1, -4, 0, 25)
+			item.Position = UDim2.new(0, 2, 0, y)
+			item.Text = data.title .. " (" .. data.id .. ")"
+			item.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			item.TextColor3 = Color3.new(1,1,1)
+			item.TextSize = 12
+			item.Font = Enum.Font.Gotham
+			item.Parent = scrollFrame
+			makeRound(item)
+
+			item.MouseButton1Click:Connect(function()
+				musicBox.Text = data.id
+				local anim = TweenService:Create(item, TweenInfo.new(0.15, Enum.EasingStyle.Bounce), {Size = item.Size + UDim2.new(0,4,0,0)})
+				anim:Play()
+				anim.Completed:Wait()
+				TweenService:Create(item, TweenInfo.new(0.1), {Size = item.Size}):Play()
+			end)
+
+			y += 30
+		end
+	end
+	scrollFrame.CanvasSize = UDim2.new(0, 0, 0, y)
+end
+
+searchBtn.MouseButton1Click:Connect(function()
+	refreshList(searchBox.Text)
+end)
+
+refreshList("")
 
 -- Minimize Logic
 local minimized = false
