@@ -1,173 +1,170 @@
+-- LocalScript: RIXHU Music GUI
+-- Place this LocalScript in StarterPlayerScripts or StarterGui
+
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local RixhuMusic = {}
+-- Main GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RIXHUMusicUI"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
 
-function RixhuMusic:Create()
-	-- Main GUI
-	local screenGui = Instance.new("ScreenGui")
-	screenGui.Name = "RIXHUMusicUI"
-	screenGui.Parent = player:WaitForChild("PlayerGui")
-	screenGui.ResetOnSpawn = false
+-- Main Container (Background Image)
+local mainFrame = Instance.new("ImageLabel")
+mainFrame.Size = UDim2.new(0, 225, 0, 300)
+mainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
+mainFrame.Image = "rbxassetid://81566764268635"
+mainFrame.BackgroundTransparency = 1
+mainFrame.Name = "MainFrame"
+mainFrame.Parent = screenGui
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.ScaleType = Enum.ScaleType.Stretch
 
-	-- Main Container (Background Image)
-	local mainFrame = Instance.new("ImageLabel")
-	mainFrame.Size = UDim2.new(0, 225, 0, 300)
-	mainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
-	mainFrame.Image = "rbxassetid://81566764268635"
-	mainFrame.BackgroundTransparency = 1
-	mainFrame.Name = "MainFrame"
-	mainFrame.Parent = screenGui
-	mainFrame.Active = true
-	mainFrame.Draggable = true
-	mainFrame.ScaleType = Enum.ScaleType.Stretch
-
-	-- Corner Radius Function
-	local function makeRound(instance)
-		local corner = Instance.new("UICorner")
-		corner.CornerRadius = UDim.new(0, 8)
-		corner.Parent = instance
-	end
-
-	-- Close Button
-	local closeBtn = Instance.new("TextButton")
-	closeBtn.Size = UDim2.new(0, 25, 0, 25)
-	closeBtn.Position = UDim2.new(1, -30, 0, 5)
-	closeBtn.Text = "X"
-	closeBtn.Font = Enum.Font.GothamBold
-	closeBtn.TextSize = 14
-	closeBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-	closeBtn.TextColor3 = Color3.new(1, 1, 1)
-	closeBtn.Parent = mainFrame
-	makeRound(closeBtn)
-	closeBtn.MouseButton1Click:Connect(function()
-		screenGui:Destroy()
-	end)
-
-	-- Minimize Button
-	local minBtn = Instance.new("TextButton")
-	minBtn.Size = UDim2.new(0, 25, 0, 25)
-	minBtn.Position = UDim2.new(1, -60, 0, 5)
-	minBtn.Text = "-"
-	minBtn.Font = Enum.Font.GothamBold
-	minBtn.TextSize = 18
-	minBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	minBtn.TextColor3 = Color3.new(1, 1, 1)
-	minBtn.Parent = mainFrame
-	makeRound(minBtn)
-
-	-- Title
-	local title = Instance.new("TextLabel")
-	title.Size = UDim2.new(1, -10, 0, 30)
-	title.Position = UDim2.new(0, 5, 0, 5)
-	title.BackgroundTransparency = 1
-	title.Text = "RIXHU MUSIC"
-	title.Font = Enum.Font.GothamBlack
-	title.TextColor3 = Color3.fromRGB(255, 255, 255)
-	title.TextSize = 18
-	title.Parent = mainFrame
-
-	-- Main UI Container
-	local container = Instance.new("Frame")
-	container.Size = UDim2.new(1, -10, 1, -40)
-	container.Position = UDim2.new(0, 5, 0, 35)
-	container.BackgroundTransparency = 1
-	container.Name = "Container"
-	container.Parent = mainFrame
-
-	-- Input Box
-	local musicBox = Instance.new("TextBox")
-	musicBox.Size = UDim2.new(0.7, 0, 0, 30)
-	musicBox.PlaceholderText = "Enter Music ID..."
-	musicBox.Text = ""
-	musicBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	musicBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-	musicBox.Font = Enum.Font.Gotham
-	musicBox.TextSize = 14
-	musicBox.BorderSizePixel = 0
-	musicBox.Parent = container
-	makeRound(musicBox)
-
-	local currentSound = nil
-
-	-- Play Button
-	local playButton = Instance.new("TextButton")
-	playButton.Size = UDim2.new(0.25, 0, 0, 30)
-	playButton.Position = UDim2.new(0.75, 5, 0, 0)
-	playButton.Text = "▶"
-	playButton.Font = Enum.Font.GothamBlack
-	playButton.TextSize = 16
-	playButton.TextColor3 = Color3.new(1, 1, 1)
-	playButton.BackgroundColor3 = Color3.new(0, 0, 0)
-	playButton.Parent = container
-	makeRound(playButton)
-
-	-- Fade-Out & Play Music
-	local function playMusic(id)
-		if currentSound then
-			local fade = TweenService:Create(currentSound, TweenInfo.new(0.5), {Volume = 0})
-			fade:Play()
-			fade.Completed:Wait()
-			currentSound:Stop()
-			currentSound:Destroy()
-		end
-		local sound = Instance.new("Sound")
-		sound.SoundId = "rbxassetid://" .. id
-		sound.Volume = 1
-		sound.Looped = true
-		sound.Parent = workspace
-		sound:Play()
-		currentSound = sound
-	end
-
-	playButton.MouseButton1Click:Connect(function()
-		local id = musicBox.Text
-		if tonumber(id) then
-			playMusic(id)
-		end
-	end)
-
-	-- Checkboxes Logic
-	local checkboxFrame = Instance.new("Frame")
-	checkboxFrame.Size = UDim2.new(1, 0, 0, 35)
-	checkboxFrame.Position = UDim2.new(0, 0, 0, 35)
-	checkboxFrame.BackgroundTransparency = 1
-	checkboxFrame.Parent = container
-
-	local checkboxes = {}
-	local labels = {"Scooters", "Vehicles", "Houses"}
-	
-	for i = 1, 3 do
-		local cb = Instance.new("TextButton")
-		cb.Size = UDim2.new(0.3, -4, 1, -5)
-		cb.Position = UDim2.new((i-1)*0.35, 2, 0, 2)
-		cb.BackgroundColor3 = Color3.fromRGB(30,30,30)
-		cb.Text = labels[i]
-		cb.TextColor3 = Color3.new(1,1,1)
-		cb.Font = Enum.Font.Gotham
-		cb.TextSize = 12
-		cb.BorderSizePixel = 0
-		cb.Parent = checkboxFrame
-		makeRound(cb)
-
-		local toggled = false
-		cb.MouseButton1Click:Connect(function()
-			toggled = not toggled
-			cb.BackgroundColor3 = toggled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(30, 30, 30)
-			checkboxes[labels[i]] = toggled
-		end)
-
-		checkboxes[labels[i]] = false
-	end
-
-	-- Minimize Logic
-	local minimized = false
-	minBtn.MouseButton1Click:Connect(function()
-		minimized = not minimized
-		local goal = minimized and UDim2.new(0, 0, 0, 0) or UDim2.new(0, 225, 0, 300)
-		TweenService:Create(mainFrame, TweenInfo.new(0.3), {Size = goal}):Play()
-	end)
+-- Corner Radius Function
+local function makeRound(instance)
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 8)
+	corner.Parent = instance
 end
 
-return RixhuMusic
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 14
+closeBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Parent = mainFrame
+makeRound(closeBtn)
+closeBtn.MouseButton1Click:Connect(function()
+	screenGui:Destroy()
+end)
+
+-- Minimize Button
+local minBtn = Instance.new("TextButton")
+minBtn.Size = UDim2.new(0, 25, 0, 25)
+minBtn.Position = UDim2.new(1, -60, 0, 5)
+minBtn.Text = "-"
+minBtn.Font = Enum.Font.GothamBold
+minBtn.TextSize = 18
+minBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+minBtn.TextColor3 = Color3.new(1, 1, 1)
+minBtn.Parent = mainFrame
+makeRound(minBtn)
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -10, 0, 30)
+title.Position = UDim2.new(0, 5, 0, 5)
+title.BackgroundTransparency = 1
+title.Text = "RIXHU MUSIC"
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 18
+title.Parent = mainFrame
+
+-- Main UI Container
+local container = Instance.new("Frame")
+container.Size = UDim2.new(1, -10, 1, -40)
+container.Position = UDim2.new(0, 5, 0, 35)
+container.BackgroundTransparency = 1
+container.Name = "Container"
+container.Parent = mainFrame
+
+-- Input Box
+local musicBox = Instance.new("TextBox")
+musicBox.Size = UDim2.new(0.7, 0, 0, 30)
+musicBox.PlaceholderText = "Enter Music ID..."
+musicBox.Text = ""
+musicBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+musicBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+musicBox.Font = Enum.Font.Gotham
+musicBox.TextSize = 14
+musicBox.BorderSizePixel = 0
+musicBox.Parent = container
+makeRound(musicBox)
+
+local currentSound = nil
+
+-- Play Button
+local playButton = Instance.new("TextButton")
+playButton.Size = UDim2.new(0.25, 0, 0, 30)
+playButton.Position = UDim2.new(0.75, 5, 0, 0)
+playButton.Text = "▶"
+playButton.Font = Enum.Font.GothamBlack
+playButton.TextSize = 16
+playButton.TextColor3 = Color3.new(1, 1, 1)
+playButton.BackgroundColor3 = Color3.new(0, 0, 0)
+playButton.Parent = container
+makeRound(playButton)
+
+-- Fade-Out & Play Music
+local function playMusic(id)
+	if currentSound then
+		local fade = TweenService:Create(currentSound, TweenInfo.new(0.5), {Volume = 0})
+		fade:Play()
+		fade.Completed:Wait()
+		currentSound:Stop()
+		currentSound:Destroy()
+	end
+	local sound = Instance.new("Sound")
+	sound.SoundId = "rbxassetid://" .. id
+	sound.Volume = 1
+	sound.Looped = true
+	sound.Parent = workspace
+	sound:Play()
+	currentSound = sound
+end
+
+playButton.MouseButton1Click:Connect(function()
+	local id = musicBox.Text
+	if tonumber(id) then
+		playMusic(id)
+	end
+end)
+
+-- Checkboxes Logic
+local checkboxFrame = Instance.new("Frame")
+checkboxFrame.Size = UDim2.new(1, 0, 0, 35)
+checkboxFrame.Position = UDim2.new(0, 0, 0, 35)
+checkboxFrame.BackgroundTransparency = 1
+checkboxFrame.Parent = container
+
+local checkboxes = {}
+local labels = {"Scooters", "Vehicles", "Houses"}
+
+for i = 1, 3 do
+	local cb = Instance.new("TextButton")
+	cb.Size = UDim2.new(0.3, -4, 1, -5)
+	cb.Position = UDim2.new((i-1)*0.35, 2, 0, 2)
+	cb.BackgroundColor3 = Color3.fromRGB(30,30,30)
+	cb.Text = labels[i]
+	cb.TextColor3 = Color3.new(1,1,1)
+	cb.Font = Enum.Font.Gotham
+	cb.TextSize = 12
+	cb.BorderSizePixel = 0
+	cb.Parent = checkboxFrame
+	makeRound(cb)
+
+	local toggled = false
+	cb.MouseButton1Click:Connect(function()
+		toggled = not toggled
+		cb.BackgroundColor3 = toggled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(30, 30, 30)
+		checkboxes[labels[i]] = toggled
+	end)
+
+	checkboxes[labels[i]] = false
+end
+
+-- Minimize Logic
+local minimized = false
+minBtn.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	local goal = minimized and UDim2.new(0, 0, 0, 0) or UDim2.new(0, 225, 0, 300)
+	TweenService:Create(mainFrame, TweenInfo.new(0.3), {Size = goal}):Play()
+end)
