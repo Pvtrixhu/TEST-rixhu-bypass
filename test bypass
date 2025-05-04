@@ -1,1 +1,247 @@
+-- RIXHU MUSIC UI Script for Brookhaven
+-- Place this LocalScript in StarterGui or StarterPlayerScripts
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RIXHUMusicUI"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+-- Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 225, 0, 300)
+mainFrame.Position = UDim2.new(0.1, 0, 0.1, 0)
+mainFrame.BackgroundTransparency = 1
+mainFrame.Name = "MainFrame"
+mainFrame.Parent = screenGui
+mainFrame.Active = true
+mainFrame.Draggable = true
+
+-- Background Image
+local bg = Instance.new("ImageLabel")
+bg.Size = UDim2.new(1, 0, 1, 0)
+bg.Position = UDim2.new(0, 0, 0, 0)
+bg.BackgroundTransparency = 1
+bg.Image = "rbxassetid://81566764268635"
+bg.ScaleType = Enum.ScaleType.Stretch
+bg.Parent = mainFrame
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "RIXHU MUSIC"
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 20
+title.Parent = mainFrame
+
+-- Minimize/Maximize Button
+local minButton = Instance.new("TextButton")
+minButton.Size = UDim2.new(0, 30, 0, 30)
+minButton.Position = UDim2.new(1, -35, 0, 5)
+minButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+minButton.TextColor3 = Color3.new(1, 1, 1)
+minButton.Text = "-"
+minButton.Font = Enum.Font.Gotham
+minButton.TextSize = 20
+minButton.Parent = mainFrame
+minButton.BackgroundTransparency = 0.2
+minButton.ClipsDescendants = true
+minButton.ZIndex = 3
+minButton.AutoButtonColor = false
+minButton.BorderSizePixel = 0
+minButton.Name = "MinButton"
+minButton.TextStrokeTransparency = 0.8
+minButton.TextScaled = true
+minButton.AnchorPoint = Vector2.new(0.5, 0.5)
+minButton.TextWrapped = true
+
+-- Music ID Input
+local musicBox = Instance.new("TextBox")
+musicBox.Size = UDim2.new(0.7, 0, 0, 30)
+musicBox.Position = UDim2.new(0.05, 0, 0, 40)
+musicBox.PlaceholderText = "Enter Music ID..."
+musicBox.Text = ""
+musicBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+musicBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+musicBox.BorderSizePixel = 0
+musicBox.Font = Enum.Font.Gotham
+musicBox.TextSize = 14
+musicBox.Parent = mainFrame
+musicBox.TextWrapped = true
+
+-- Play Button
+local playButton = Instance.new("TextButton")
+playButton.Size = UDim2.new(0.2, 0, 0, 30)
+playButton.Position = UDim2.new(0.75, 0, 0, 40)
+playButton.Text = "▶"
+playButton.Font = Enum.Font.GothamBlack
+playButton.TextSize = 16
+playButton.TextColor3 = Color3.new(1, 1, 1)
+playButton.BackgroundColor3 = Color3.new(0, 0, 0)
+playButton.Parent = mainFrame
+playButton.AutoButtonColor = true
+playButton.BorderSizePixel = 0
+
+-- Checkboxes Frame
+local checkFrame = Instance.new("Frame")
+checkFrame.Size = UDim2.new(1, -10, 0, 40)
+checkFrame.Position = UDim2.new(0.05, 0, 0, 80)
+checkFrame.BackgroundTransparency = 1
+checkFrame.Parent = mainFrame
+
+local checkboxes = {}
+local labels = {"Scooters", "Vehicles", "Houses"}
+
+for i = 1, 3 do
+	local cb = Instance.new("TextButton")
+	cb.Size = UDim2.new(0.3, -5, 0, 30)
+	cb.Position = UDim2.new((i-1)*0.35, 0, 0, 5)
+	cb.BackgroundColor3 = Color3.fromRGB(30,30,30)
+	cb.Text = labels[i]
+	cb.TextColor3 = Color3.new(1,1,1)
+	cb.Font = Enum.Font.Gotham
+	cb.TextSize = 12
+	cb.BorderSizePixel = 0
+	cb.Parent = checkFrame
+	cb.Name = labels[i]
+	cb.AutoButtonColor = false
+
+	local toggled = false
+	cb.MouseButton1Click:Connect(function()
+		toggled = not toggled
+		cb.BackgroundColor3 = toggled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(30, 30, 30)
+		checkboxes[labels[i]] = toggled
+	end)
+
+	checkboxes[labels[i]] = false
+end
+
+-- Music ID List Title
+local musicLabel = Instance.new("TextLabel")
+musicLabel.Size = UDim2.new(1, -10, 0, 25)
+musicLabel.Position = UDim2.new(0.05, 0, 0, 125)
+musicLabel.Text = "MUSIC ID's"
+musicLabel.Font = Enum.Font.GothamSemibold
+musicLabel.TextSize = 16
+musicLabel.BackgroundTransparency = 1
+musicLabel.TextColor3 = Color3.new(1, 1, 1)
+musicLabel.Parent = mainFrame
+
+-- Search Field
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(0.6, 0, 0, 25)
+searchBox.Position = UDim2.new(0.05, 0, 0, 155)
+searchBox.PlaceholderText = "Search music..."
+searchBox.Text = ""
+searchBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+searchBox.TextColor3 = Color3.new(1, 1, 1)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 12
+searchBox.BorderSizePixel = 0
+searchBox.Parent = mainFrame
+
+local searchBtn = Instance.new("TextButton")
+searchBtn.Size = UDim2.new(0.3, 0, 0, 25)
+searchBtn.Position = UDim2.new(0.65, 0, 0, 155)
+searchBtn.Text = "Search"
+searchBtn.Font = Enum.Font.Gotham
+searchBtn.TextColor3 = Color3.new(1, 1, 1)
+searchBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+searchBtn.TextSize = 12
+searchBtn.Parent = mainFrame
+searchBtn.BorderSizePixel = 0
+
+-- Scrollable Music ID List
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, -10, 0, 100)
+scrollFrame.Position = UDim2.new(0.05, 0, 0, 185)
+scrollFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+scrollFrame.ScrollBarThickness = 4
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollFrame.BorderSizePixel = 0
+scrollFrame.Parent = mainFrame
+
+-- Music data list (editable later)
+local musicList = {
+	{Title = "Jo Tum Mere Ho", ID = "1843524506"},
+	{Title = "Numb (Linkin Park)", ID = "131271963"},
+	{Title = "Believer", ID = "1399935329"},
+	{Title = "Despacito", ID = "1341533521"},
+}
+
+-- Populate list function
+local function refreshList(filter)
+	scrollFrame:ClearAllChildren()
+	local y = 0
+	for _, item in ipairs(musicList) do
+		if not filter or item.Title:lower():find(filter:lower()) or item.ID:find(filter) then
+			local label = Instance.new("TextButton")
+			label.Size = UDim2.new(1, 0, 0, 30)
+			label.Position = UDim2.new(0, 0, 0, y)
+			label.BackgroundTransparency = 1
+			label.Text = item.Title .. "\n" .. item.ID
+			label.TextWrapped = true
+			label.TextColor3 = Color3.new(1, 1, 1)
+			label.Font = Enum.Font.Gotham
+			label.TextSize = 12
+			label.Parent = scrollFrame
+			label.MouseButton1Click:Connect(function()
+				musicBox.Text = item.ID
+				local pop = TweenService:Create(label, TweenInfo.new(0.1), {TextSize = 14})
+				pop:Play()
+			end)
+			y = y + 35
+		end
+	end
+	scrollFrame.CanvasSize = UDim2.new(0, 0, 0, y)
+end
+
+searchBtn.MouseButton1Click:Connect(function()
+	refreshList(searchBox.Text)
+end)
+
+-- Play Button Logic
+playButton.MouseButton1Click:Connect(function()
+	local id = musicBox.Text
+	if id == "" then return end
+
+	local target = nil
+	if checkboxes["Scooters"] then
+		target = "Scooter"
+	elseif checkboxes["Vehicles"] then
+		target = "Vehicle"
+	elseif checkboxes["Houses"] then
+		target = "House"
+	end
+
+	if target then
+		local sound = Instance.new("Sound", workspace)
+		sound.SoundId = "rbxassetid://" .. id
+		sound.Volume = 1
+		sound:Play()
+	end
+
+	local pop = TweenService:Create(playButton, TweenInfo.new(0.1), {Size = UDim2.new(0.2, 0, 0, 35)})
+	pop:Play()
+end)
+
+-- Minimize logic
+local minimized = false
+minButton.MouseButton1Click:Connect(function()
+	minimized = not minimized
+	local goal = minimized and UDim2.new(0, 0, 0, 0) or UDim2.new(0, 225, 0, 300)
+	local tween = TweenService:Create(mainFrame, TweenInfo.new(0.4), {Size = goal})
+	tween:Play()
+end)
+
+-- Initial load
+refreshList()
 
