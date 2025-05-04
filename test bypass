@@ -39,6 +39,11 @@ local function makeRound(instance)
 	corner.Parent = instance
 end
 
+-- Hidden container to hold UI during minimize
+local hiddenContainer = Instance.new("Folder")
+hiddenContainer.Name = "HiddenContainer"
+hiddenContainer.Parent = screenGui
+
 -- Close Button
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 25, 0, 25)
@@ -69,7 +74,7 @@ minBtn.Font = Enum.Font.GothamBold
 minBtn.TextSize = 18
 minBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 minBtn.TextColor3 = Color3.new(1, 1, 1)
-minBtn.Parent = mainFrame
+minBtn.Parent = screenGui
 makeRound(minBtn)
 
 -- Title
@@ -261,5 +266,11 @@ refreshList("")
 local minimized = false
 minBtn.MouseButton1Click:Connect(function()
 	minimized = not minimized
-	mainFrame.Visible = not minimized
+	if minimized then
+		TweenService:Create(mainFrame, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
+		mainFrame.Visible = false
+	else
+		mainFrame.Visible = true
+		TweenService:Create(mainFrame, TweenInfo.new(0.3), {ImageTransparency = 0}):Play()
+	end
 end)
