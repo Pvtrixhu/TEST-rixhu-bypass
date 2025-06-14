@@ -6,7 +6,8 @@ local splashGui = Instance.new("ScreenGui")
 splashGui.IgnoreGuiInset = true
 splashGui.ResetOnSpawn = false
 splashGui.Name = "SplashGui"
-splashGui.Parent = CoreGui
+local player = game:GetService("Players").LocalPlayer
+splashGui.Parent = player:WaitForChild("PlayerGui")
 
 local blur = Instance.new("BlurEffect")
 blur.Size = 24
@@ -15,7 +16,7 @@ blur.Parent = Lighting
 local customOverlay = Instance.new("ImageLabel")
 customOverlay.Size = UDim2.new(1, 0, 1, 0)
 customOverlay.BackgroundTransparency = 1
-customOverlay.Image = "rbxassetid://89140921134169"
+customOverlay.Image = "rbxassetid://98787600165060"
 customOverlay.ImageTransparency = 0.75
 customOverlay.ScaleType = Enum.ScaleType.Stretch
 customOverlay.ZIndex = 1
@@ -491,7 +492,7 @@ local letters = {
         StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
     local function sendChat(msg)
-    local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+    local filteredMessage = msg
     local tagged = filteredMessage ~= msg
     local keepTextCheckbox = script.Parent.Parent.Parent:FindFirstChild("KeepTextCheckbox")
     local keepTextTick = keepTextCheckbox and keepTextCheckbox:FindFirstChild("Tick")
@@ -503,7 +504,11 @@ local letters = {
         if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
             ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
         else
+            if chat then
             chat:SendAsync(msg)
+        else
+            warn("Chat channel not found")
+        end
         end
         
         -- ONLY clear if checkbox is NOT checked
@@ -1007,7 +1012,7 @@ local letters = {
         StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
     end
     local function sendChat(msg)
-    local filteredMessage = game:GetService("Chat"):FilterStringForBroadcast(msg, LocalPlayer)
+    local filteredMessage = msg
     local tagged = filteredMessage ~= msg
     local keepTextCheckbox = script.Parent.Parent.Parent:FindFirstChild("KeepTextCheckbox")
     local keepTextTick = keepTextCheckbox and keepTextCheckbox:FindFirstChild("Tick")
@@ -1019,7 +1024,11 @@ local letters = {
         if TextChatService.ChatVersion == Enum.ChatVersion.LegacyChatService then
             ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
         else
+            if chat then
             chat:SendAsync(msg)
+        else
+            warn("Chat channel not found")
+        end
         end
         
         -- ONLY clear if checkbox is NOT checked
